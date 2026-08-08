@@ -25,6 +25,7 @@
     --line:#D8DFE6; --line-soft:#E7ECF1;
   }
   *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
   body{
     margin:0; background:var(--bg); color:var(--ink);
     font-family:'IBM Plex Sans', system-ui, sans-serif;
@@ -41,15 +42,15 @@
   .lang-toggle{display:flex; gap:4px; margin-top:8px;}
   .lang-btn{
     background:var(--panel2); border:1px solid var(--line); color:var(--ink-dim);
-    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:4px 10px;
-    border-radius:5px; cursor:pointer; letter-spacing:0.04em;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:6px 12px;
+    border-radius:5px; cursor:pointer; letter-spacing:0.04em; min-height:32px;
   }
   .lang-btn.active{background:var(--accent); border-color:var(--accent-strong); color:#fff;}
-  header .badge-row{display:flex; gap:8px; font-size:11px; color:var(--ink-faint); font-family:'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:0.06em;}
+  header .badge-row{display:flex; flex-wrap:wrap; gap:8px; font-size:11px; color:var(--ink-faint); font-family:'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:0.06em; max-width:280px; justify-content:flex-end;}
   header .badge-row span{border:1px solid var(--line); border-radius:3px; padding:3px 7px;}
 
   .layout{display:grid; grid-template-columns:300px 1fr; gap:20px;}
-  @media (max-width:860px){ .layout{grid-template-columns:1fr;} }
+  @media (max-width:860px){ .layout{grid-template-columns:1fr; gap:16px;} }
 
   .panel{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px 16px 18px;}
   .panel + .panel{margin-top:16px;}
@@ -61,34 +62,35 @@
 
   .field{margin-bottom:12px;}
   .field:last-child{margin-bottom:0;}
-  .field label{display:flex; justify-content:space-between; font-size:12.5px; color:var(--ink-dim); margin-bottom:5px;}
-  .field label b{color:var(--ink); font-weight:500; font-family:'IBM Plex Mono',monospace; font-size:12.5px;}
+  .field label{display:flex; justify-content:space-between; font-size:12.5px; color:var(--ink-dim); margin-bottom:5px; gap:8px;}
+  .field label span{min-width:0;}
+  .field label b{color:var(--ink); font-weight:500; font-family:'IBM Plex Mono',monospace; font-size:12.5px; white-space:nowrap;}
   .field input[type=range]{
-    width:100%; height:3px; -webkit-appearance:none; appearance:none; background:var(--line); border-radius:2px; outline:none;
+    width:100%; height:6px; -webkit-appearance:none; appearance:none; background:var(--line); border-radius:3px; outline:none; touch-action:pan-y;
   }
   .field input[type=range]::-webkit-slider-thumb{
-    -webkit-appearance:none; width:14px; height:14px; border-radius:50%; background:var(--accent); cursor:pointer; border:2px solid var(--bg);
+    -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--accent); cursor:pointer; border:3px solid var(--panel); box-shadow:0 1px 3px rgba(0,0,0,0.25);
   }
   .field input[type=range]::-moz-range-thumb{
-    width:14px; height:14px; border-radius:50%; background:var(--accent); cursor:pointer; border:2px solid var(--bg);
+    width:22px; height:22px; border-radius:50%; background:var(--accent); cursor:pointer; border:3px solid var(--panel); box-shadow:0 1px 3px rgba(0,0,0,0.25);
   }
   .field-note{font-size:11px; color:var(--ink-faint); margin-top:4px; line-height:1.4;}
   .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
 
   select{
     width:100%; background:var(--field); border:1px solid var(--line); color:var(--ink);
-    font-family:'IBM Plex Sans',sans-serif; font-size:12.5px; font-weight:500; padding:8px 10px;
-    border-radius:6px; cursor:pointer;
+    font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:500; padding:10px 10px;
+    border-radius:6px; cursor:pointer; min-height:40px;
   }
 
   .strat-row{display:flex; gap:12px; margin-bottom:14px;}
   .strat-svg{width:36px; height:160px; flex-shrink:0; border-radius:4px; overflow:hidden; border:1px solid var(--line);}
-  .strat-tabs{display:flex; flex-direction:column; gap:4px; flex:1;}
+  .strat-tabs{display:flex; flex-direction:column; gap:4px; flex:1; min-width:0;}
   .tab-btn{
     text-align:left; background:var(--panel2); border:1px solid var(--line); color:var(--ink-dim);
-    font-family:'IBM Plex Sans',sans-serif; font-size:11.5px; font-weight:500; padding:6px 9px;
+    font-family:'IBM Plex Sans',sans-serif; font-size:11.5px; font-weight:500; padding:8px 9px;
     border-radius:5px; cursor:pointer; transition:background .12s, border-color .12s, color .12s;
-    display:flex; align-items:center; gap:7px;
+    display:flex; align-items:center; gap:7px; min-height:34px;
   }
   .tab-btn::before{content:''; width:8px; height:8px; border-radius:2px; background:var(--dot,var(--ink-faint)); flex-shrink:0;}
   .tab-btn:nth-child(1){ --dot:var(--layer1-b); }
@@ -100,16 +102,17 @@
   .tab-btn.active{background:var(--accent-dim); border-color:var(--accent); color:var(--ink);}
   .type-btn{
     text-align:center; background:var(--panel2); border:1px solid var(--line); color:var(--ink-dim);
-    font-family:'IBM Plex Sans',sans-serif; font-size:11.5px; font-weight:500; padding:6px 9px;
+    font-family:'IBM Plex Sans',sans-serif; font-size:11.5px; font-weight:500; padding:8px 9px;
     border-radius:5px; cursor:pointer; transition:background .12s, border-color .12s, color .12s;
+    min-height:34px;
   }
   .type-btn:hover{background:var(--accent-dim);}
   .type-btn.active{background:var(--accent-dim); border-color:var(--accent); color:var(--ink);}
 
   button{
     width:100%; background:var(--field); border:1px solid var(--line); color:var(--ink);
-    font-family:'IBM Plex Sans',sans-serif; font-size:12.5px; font-weight:500; padding:9px 10px;
-    border-radius:6px; cursor:pointer; transition:background .15s, border-color .15s;
+    font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:500; padding:11px 10px;
+    border-radius:6px; cursor:pointer; transition:background .15s, border-color .15s; min-height:42px;
   }
   button:hover{background:var(--panel2); border-color:var(--accent-dim);}
   button.primary{background:var(--accent); border-color:var(--accent-strong); color:#FFFFFF;}
@@ -123,28 +126,30 @@
     position:absolute; top:18px; right:18px; width:118px; height:118px; border-radius:50%;
     border:2.5px solid; display:flex; flex-direction:column; align-items:center; justify-content:center;
     transform:rotate(-8deg); font-family:'IBM Plex Mono',monospace; text-align:center; pointer-events:none;
+    background:rgba(255,255,255,0.85); backdrop-filter:blur(2px);
   }
   .stamp .fs-val{font-size:26px; font-weight:600; line-height:1;}
   .stamp .fs-label{font-size:9px; letter-spacing:0.08em; margin-top:4px; text-transform:uppercase;}
   .stamp .fs-method{font-size:8px; letter-spacing:0.06em; margin-top:2px; opacity:.8;}
 
-  .results-bar{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px;}
+  .results-bar{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:14px;}
   .stat{background:var(--panel2); border:1px solid var(--line); border-radius:7px; padding:10px 12px;}
   .stat .lbl{font-size:10.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-faint);}
   .stat .val{font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:500; margin-top:3px;}
-  @media (max-width:640px){ .results-bar{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:760px){ .results-bar{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:420px){ .stamp{width:92px; height:92px; top:10px; right:10px;} .stamp .fs-val{font-size:21px;} .stat .val{font-size:16px;} .stat .lbl{font-size:9.5px;} }
 
   details.slice-table{margin-top:16px; background:var(--panel); border:1px solid var(--line); border-radius:8px;}
   details.slice-table summary{
-    padding:11px 16px; cursor:pointer; font-size:12.5px; color:var(--accent); list-style:none; user-select:none;
-    display:flex; align-items:center; gap:6px;
+    padding:13px 16px; cursor:pointer; font-size:12.5px; color:var(--accent); list-style:none; user-select:none;
+    display:flex; align-items:center; gap:6px; min-height:44px;
   }
   details.slice-table summary::-webkit-details-marker{display:none;}
   details.slice-table summary::before{content:'▸'; font-size:10px; transition:transform .15s;}
   details.slice-table[open] summary::before{transform:rotate(90deg);}
-  .table-wrap{padding:0 16px 16px; overflow-x:auto;}
+  .table-wrap{padding:0 16px 16px; overflow-x:auto; -webkit-overflow-scrolling:touch;}
   table{width:100%; border-collapse:collapse; font-family:'IBM Plex Mono',monospace; font-size:11.5px;}
-  th,td{padding:6px 8px; text-align:right; border-bottom:1px solid var(--line-soft); white-space:nowrap;}
+  th,td{padding:7px 8px; text-align:right; border-bottom:1px solid var(--line-soft); white-space:nowrap;}
   th{color:var(--ink-faint); font-weight:500; text-transform:uppercase; font-size:10px; letter-spacing:0.04em;}
   td:first-child, th:first-child{text-align:left; color:var(--ink-dim);}
   tfoot td{border-top:1px solid var(--line); border-bottom:none; font-weight:600; color:var(--accent); padding-top:8px;}
@@ -154,7 +159,45 @@
 
   .legend{display:flex; gap:14px; flex-wrap:wrap; margin-top:10px; font-size:11px; color:var(--ink-faint);}
   .legend span{display:inline-flex; align-items:center; gap:5px;}
-  .legend i{width:9px; height:9px; border-radius:2px; display:inline-block;}
+  .legend i{width:9px; height:9px; border-radius:2px; display:inline-block; flex-shrink:0;}
+
+  .site-footer{border-top:1px solid var(--line); margin-top:36px; background:var(--panel);}
+  .footer-inner{max-width:1180px; margin:0 auto; padding:28px 20px 32px;}
+  .footer-inner h2{
+    font-family:'Newsreader', serif; font-weight:600; font-style:italic; font-size:18px;
+    color:var(--ink); margin:0 0 10px;
+  }
+  .footer-inner p{font-size:12.5px; color:var(--ink-dim); line-height:1.6; max-width:760px; margin:0 0 20px;}
+  .footer-standards{max-width:820px; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid var(--line);}
+  .footer-standards h3{font-size:12px; text-transform:uppercase; letter-spacing:0.07em; color:var(--accent); font-weight:600; margin:0 0 10px;}
+  .footer-standards ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px;}
+  .footer-standards li{font-size:12px; color:var(--ink-dim); line-height:1.55;}
+  .footer-standards li b{color:var(--ink); font-family:'IBM Plex Mono',monospace; font-weight:600;}
+  .footer-standards .footer-note{margin-top:10px;}
+  .footer-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px; border-top:1px solid var(--line); padding-top:18px;}
+  @media (max-width:640px){ .footer-grid{grid-template-columns:1fr;} }
+  .footer-author-name{font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; color:var(--ink);}
+  .footer-author-dept{font-size:12px; color:var(--ink-dim); margin-top:3px; line-height:1.5;}
+  .footer-author-email a{font-size:12px; color:var(--accent); text-decoration:none; margin-top:3px; display:inline-block; min-height:24px;}
+  .footer-author-email a:hover{text-decoration:underline;}
+  .footer-meta{font-size:12px; color:var(--ink-dim);}
+  .footer-meta b{font-family:'IBM Plex Mono',monospace; color:var(--accent); font-size:14px;}
+  .footer-note{font-size:10.5px; color:var(--ink-faint); margin-top:5px; line-height:1.5; max-width:320px;}
+
+  @media (max-width:640px){
+    .app{padding:18px 14px 44px;}
+    header{gap:12px; padding-bottom:14px; margin-bottom:18px;}
+    header h1{font-size:20px;}
+    header .badge-row{max-width:100%; justify-content:flex-start;}
+    header > div:last-child{width:100%; display:flex; flex-direction:column; align-items:flex-start; gap:8px;}
+    .panel{padding:14px 14px 16px;}
+    .row2{gap:8px;}
+    .footer-inner{padding:22px 14px 26px;}
+  }
+  @media (max-width:380px){
+    header h1{font-size:18px;}
+    .row2{grid-template-columns:1fr; gap:12px;}
+  }
 </style>
 </head>
 <body>
@@ -162,12 +205,12 @@
 
   <header>
     <div>
-      <h1 data-i18n="title">Ổn định mái dốc — mặt trượt tròn</h1>
-      <div class="sub" data-i18n="subtitle">Tính hệ số an toàn theo phương pháp Fellenius (Ordinary Method of Slices) và Bishop đơn giản hóa, phân tích mặt cắt 2D bằng phương pháp chia dải, nền đất tối đa 5 lớp.</div>
+      <h1 data-i18n="title">Ổn định mái dốc — mặt trượt trụ tròn</h1>
+      <div class="sub" data-i18n="subtitle">Tính hệ số an toàn theo phương pháp phân mảnh mặt trượt trụ tròn — hỗ trợ Fellenius (OMS), Bishop đơn giản hóa, Janbu đơn giản hóa, Spencer và Morgenstern-Price; nền đất tối đa 5 lớp, có thể tách riêng đất đắp.</div>
       <div class="credit" data-i18n="credit">Phát triển: TS. Đặng Minh Tân — Trường Đại học Giao thông vận tải</div>
     </div>
     <div>
-      <div class="badge-row"><span>Fellenius</span><span>Bishop simplified</span><span>Janbu simplified</span><span data-i18n="badge_layers">5 lớp đất</span></div>
+      <div class="badge-row"><span>Fellenius</span><span>Bishop simplified</span><span>Janbu simplified</span><span>Spencer</span><span>Morgenstern-Price</span><span data-i18n="badge_layers">5 lớp đất</span></div>
       <div class="lang-toggle">
         <button type="button" class="lang-btn active" id="lang-vi">VI</button>
         <button type="button" class="lang-btn" id="lang-en">EN</button>
@@ -269,6 +312,7 @@
             <option value="fellenius" data-i18n="method_fellenius">Fellenius (OMS)</option>
             <option value="janbu" data-i18n="method_janbu">Janbu đơn giản hóa</option>
             <option value="spencer" data-i18n="method_spencer">Spencer (đầy đủ, có lực giữa các mảnh)</option>
+            <option value="mp" data-i18n="method_mp">Morgenstern-Price (đầy đủ, nửa hình sin)</option>
           </select>
         </div>
         <div class="field">
@@ -284,7 +328,7 @@
           <input type="range" id="R" min="1" max="80" step="0.2" value="13">
         </div>
         <div class="field">
-          <label><span data-i18n="label_n">Số dải tính toán</span> <b id="v-n">16</b></label>
+          <label><span data-i18n="label_n">Số mảnh tính toán</span> <b id="v-n">16</b></label>
           <input type="range" id="n" min="6" max="40" step="1" value="16">
         </div>
         <div class="field" style="margin-top:14px;">
@@ -321,9 +365,11 @@
         <div class="stat"><div class="lbl" data-i18n="stat_bishop">FS — Bishop</div><div class="val" id="fs-bishop">—</div></div>
         <div class="stat"><div class="lbl" data-i18n="stat_janbu">FS — Janbu</div><div class="val" id="fs-janbu">—</div></div>
         <div class="stat"><div class="lbl" data-i18n="stat_spencer">FS — Spencer</div><div class="val" id="fs-spencer">—</div></div>
+        <div class="stat"><div class="lbl" data-i18n="stat_mp">FS — Morgenstern-Price</div><div class="val" id="fs-mp">—</div></div>
         <div class="stat"><div class="lbl" data-i18n="stat_width">Chiều rộng khối trượt</div><div class="val" id="stat-width">—</div></div>
         <div class="stat"><div class="lbl" data-i18n="stat_depth">Độ sâu mặt trượt lớn nhất</div><div class="val" id="stat-depth">—</div></div>
       </div>
+      <div class="field-note" id="ref-standard-note" style="margin-top:8px;"></div>
 
       <div class="panel" id="contour-section" style="margin-top:16px; display:none;">
         <h2 data-i18n="contour_heading">Lưới tâm trượt &amp; đường đồng mức FS</h2>
@@ -342,7 +388,7 @@
       </div>
 
       <details class="slice-table">
-        <summary data-i18n="table_summary">Bảng tính chi tiết theo từng dải (phương pháp Bishop đơn giản hóa)</summary>
+        <summary data-i18n="table_summary">Bảng tính chi tiết theo từng mảnh (phương pháp Bishop đơn giản hóa)</summary>
         <div class="table-wrap">
           <table>
             <thead>
@@ -357,10 +403,40 @@
       </details>
 
       <div class="limits">
-        <b data-i18n="limits_label">Giới hạn của công cụ:</b> <span data-i18n="limits_text">áp dụng cho mặt trượt tròn (circular slip surface), phương pháp Fellenius (OMS) và Bishop đơn giản hóa (cân bằng mô men, bỏ qua lực giữa các dải). Nền đất tối đa 5 lớp với ranh giới nằm ngang (không nghiêng theo địa tầng thực); chỉ tiêu c, φ dùng để tính sức chống cắt tại đáy mỗi dải lấy theo lớp chứa điểm đáy đó, còn trọng lượng dải cộng dồn theo từng lớp mà dải đi qua. Lớp 5 coi là nền cứng/đá gốc — mặt trượt chạm tới ranh giới này sẽ bị coi là không hợp lệ. Áp lực nước lỗ rỗng xấp xỉ theo hệ số ru dùng chung cho mọi lớp, không mô phỏng lưới thấm hay mực nước ngầm thực tế. Không xét tải trọng động đất, mặt trượt phi tròn, địa tầng nghiêng/phức tạp, cốt gia cường (neo, cọc, vải địa kỹ thuật) hay hiệu ứng 3D. Dùng cho mục đích học tập/sơ bộ — với công trình thực tế cần kiểm tra bằng phần mềm chuyên dụng (SLOPE/W, GeoStudio, Plaxis…) và tiêu chuẩn hiện hành (TCVN 4253, 22TCN…).</span>
+        <b data-i18n="limits_label">Giới hạn của công cụ:</b> <span data-i18n="limits_text">áp dụng cho mặt trượt trụ tròn (circular slip surface). Bốn phương pháp: Fellenius (OMS), Bishop đơn giản hóa (cân bằng mô men), Janbu đơn giản hóa (cân bằng lực, hệ số hiệu chỉnh f0 theo d/L, dùng b1=0,5 chung cho đất c-φ) và Spencer (thỏa mãn đồng thời cân bằng lực và mô men bằng cách giải thêm góc nghiêng lực giữa các mảnh δ — đây là cách hiện đại để thực hiện phương pháp Bishop chuẩn/rigorous có xét lực tương tác giữa các mảnh, thay cho thủ tục thử dần nguyên bản của Bishop 1955 vì dễ hội tụ và có nghiệm xác định hơn). Bảng chi tiết từng mảnh luôn hiển thị theo cách tính Bishop. Có thể bật chế độ "Đắp" để tách riêng khối đất đắp (phía trên cao độ chân dốc) khỏi nền đất tự nhiên — khối đắp dùng γ, c, φ riêng, nền tự nhiên vẫn theo địa tầng 5 lớp. Nền đất tối đa 5 lớp với ranh giới nằm ngang (không nghiêng theo địa tầng thực); chỉ tiêu c, φ dùng để tính sức chống cắt tại đáy mỗi mảnh lấy theo lớp (hoặc khối đắp) chứa điểm đáy đó. Lớp 5 coi là nền cứng/đá gốc — mặt trượt chạm tới ranh giới này sẽ bị coi là không hợp lệ. Áp lực nước lỗ rỗng xấp xỉ theo hệ số ru dùng chung cho mọi lớp, không mô phỏng lưới thấm hay mực nước ngầm thực tế. Không xét tải trọng động đất, mặt trượt phi tròn, địa tầng nghiêng/phức tạp, cốt gia cường (neo, cọc, vải địa kỹ thuật) hay hiệu ứng 3D. Dùng cho mục đích học tập/sơ bộ — với công trình thực tế cần kiểm tra bằng phần mềm chuyên dụng (SLOPE/W, GeoStudio, Plaxis…) và tiêu chuẩn hiện hành (TCVN 4253, 22TCN…).</span>
       </div>
     </main>
   </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <h2 data-i18n="footer_heading">Giới thiệu</h2>
+      <p data-i18n="footer_about_text">Công cụ tính toán ổn định mái dốc trực tuyến, dùng cho mục đích giảng dạy và tính sơ bộ nhanh: phân tích mặt trượt trụ tròn bằng phương pháp phân mảnh, hỗ trợ nhiều phương pháp kiểm toán (Fellenius, Bishop, Janbu, Spencer, Morgenstern-Price), nền đất nhiều lớp và đất đắp. Toàn bộ tính toán chạy ngay trên trình duyệt, không gửi dữ liệu lên máy chủ nào.</p>
+
+      <div class="footer-standards">
+        <h3 data-i18n="standards_heading">Tiêu chuẩn tham khảo</h3>
+        <ul>
+          <li><b>TCVN 4054:2005</b> <span data-i18n="std_4054">— Đường ô tô — Yêu cầu thiết kế. Quy định độ dốc mái taluy đào/đắp, phân cấp bậc thềm khi mái cao hoặc qua nhiều tầng địa chất khác nhau (Bảng 24, 25).</span></li>
+          <li><b>22 TCN 262-2000</b> <span data-i18n="std_262">— Quy trình khảo sát thiết kế nền đường ô tô đắp trên đất yếu (Bộ GTVT). Quy định hệ số ổn định tối thiểu Kmin: 1,20 theo phương pháp phân mảnh cổ điển mặt trượt tròn (1,10 nếu dùng kết quả cắt nhanh không thoát nước), 1,40 theo phương pháp Bishop.</span></li>
+          <li><b>TCCS 41:2022/TCĐBVN</b> <span data-i18n="std_41">— Tiêu chuẩn khảo sát, thiết kế nền đường ô tô trên nền đất yếu (Tổng cục Đường bộ VN, biên soạn trên cơ sở cập nhật 22 TCN 262-2000, dự kiến tiến tới thay thế bằng TCVN chính thức). Dùng phương pháp Bishop làm phương pháp cơ bản; quy định Kmin theo giai đoạn: 1,20 trong quá trình thi công, 1,40 trong quá trình khai thác (giảm 0,1 nếu xét tải trọng động đất). Áp dụng cho cả đường cao tốc và các cấp đường ô tô khác.</span></li>
+          <li><b>TCVN 4253:2012</b> <span data-i18n="std_4253">— Công trình thủy lợi — Nền các công trình thủy công — Yêu cầu thiết kế. Đánh giá ổn định mái dốc theo phương pháp hệ số an toàn riêng phần (hệ số tin cậy Kn, hệ số tổ hợp tải trọng nc), khác cách tiếp cận FS đơn của công cụ này — chỉ dùng để đối chiếu phương pháp luận.</span></li>
+          <li><b>TCVN 5729:2012</b> <span data-i18n="std_5729">— Đường ô tô cao tốc — Yêu cầu thiết kế. Yêu cầu tương tự TCVN 4054 áp dụng cho đường ô tô cao tốc.</span></li>
+        </ul>
+        <div class="footer-note" data-i18n="standards_disclaimer">Số liệu tiêu chuẩn nêu trên mang tính tham khảo, có thể đã được sửa đổi/thay thế — luôn kiểm tra lại bản tiêu chuẩn hiện hành trước khi áp dụng cho hồ sơ thiết kế thực tế.</div>
+      </div>
+      <div class="footer-grid">
+        <div class="footer-author">
+          <div class="footer-author-name">TS. Đặng Minh Tân</div>
+          <div class="footer-author-dept" data-i18n="footer_dept">Bộ môn Đường bộ — Trường Đại học Giao thông Vận tải</div>
+          <div class="footer-author-email"><a href="mailto:tandang@utc.edu.vn">tandang@utc.edu.vn</a></div>
+        </div>
+        <div class="footer-meta">
+          <div><span data-i18n="footer_visits">Lượt truy cập trên thiết bị này</span>: <b id="visit-count">—</b></div>
+          <div class="footer-note" data-i18n="footer_visits_note">Đếm cục bộ trên trình duyệt này — vì đây là file tĩnh không có máy chủ nên không phải bộ đếm chung toàn cầu.</div>
+        </div>
+      </div>
+    </div>
+  </footer>
 </div>
 
 <script>
@@ -374,8 +450,8 @@ let currentLang='vi';
 
 const I18N={
   vi:{
-    title:'Ổn định mái dốc — mặt trượt tròn',
-    subtitle:'Tính hệ số an toàn theo phương pháp Fellenius (Ordinary Method of Slices) và Bishop đơn giản hóa, phân tích mặt cắt 2D bằng phương pháp chia dải, nền đất tối đa 5 lớp.',
+    title:'Ổn định mái dốc — mặt trượt trụ tròn',
+    subtitle:'Tính hệ số an toàn theo phương pháp phân mảnh mặt trượt trụ tròn — hỗ trợ Fellenius (OMS), Bishop đơn giản hóa, Janbu đơn giản hóa, Spencer và Morgenstern-Price; nền đất tối đa 5 lớp, có thể tách riêng đất đắp.',
     credit:'Phát triển: TS. Đặng Minh Tân — Trường Đại học Giao thông vận tải',
     badge_layers:'5 lớp đất',
     panel_geometry:'Hình học mái dốc',
@@ -394,11 +470,12 @@ const I18N={
     rigid_note:'Lớp cuối cùng — nền cứng/đá gốc, coi là ranh giới không cho mặt trượt xuyên qua.',
     label_ru:'ru (hệ số áp lực nước lỗ rỗng, áp dụng chung)',
     total_depth_label:'Tổng chiều dày 4 lớp trên tới nền cứng:',
-    panel_circle:'Mặt trượt tròn (thử dần)',
+    panel_circle:'Mặt trượt trụ tròn (thử dần)',
     label_method:'Phương pháp dùng để tìm kiếm & đánh giá',
     method_bishop:'Bishop đơn giản hóa', method_fellenius:'Fellenius (OMS)', method_janbu:'Janbu đơn giản hóa',
     method_spencer:'Spencer (đầy đủ, có lực giữa các mảnh)',
-    label_Xc:'Tâm trượt Xc', label_Yc:'Tâm trượt Yc', label_R:'Bán kính R', label_n:'Số dải tính toán',
+    method_mp:'Morgenstern-Price (đầy đủ, nửa hình sin)',
+    label_Xc:'Tâm trượt Xc', label_Yc:'Tâm trượt Yc', label_R:'Bán kính R', label_n:'Số mảnh tính toán',
     btn_search:'Tìm cung trượt nguy hiểm nhất',
     btn_contour:'Vẽ lưới tâm trượt & đường đồng mức FS',
     legend_layers:'Màu lớp đất — xem cột địa tầng bên trái',
@@ -406,18 +483,33 @@ const I18N={
     legend_safe:'FS ≥ 1.50 ổn định',
     legend_warn:'1.00 ≤ FS < 1.50 cần kiểm tra',
     legend_danger:'FS < 1.00 không ổn định',
-    stat_fellenius:'FS — Fellenius', stat_bishop:'FS — Bishop', stat_janbu:'FS — Janbu', stat_spencer:'FS — Spencer',
+    stat_fellenius:'FS — Fellenius', stat_bishop:'FS — Bishop', stat_janbu:'FS — Janbu', stat_spencer:'FS — Spencer', stat_mp:'FS — Morgenstern-Price',
     stat_width:'Chiều rộng khối trượt', stat_depth:'Độ sâu mặt trượt lớn nhất',
     contour_heading:'Lưới tâm trượt & đường đồng mức FS',
     contour_low:'FS ≤ 1,0', contour_mid:'FS ≈ 1,5', contour_high:'FS ≥ 2,5',
     contour_note:'Mỗi chấm = FS nhỏ nhất tìm được tại tâm đó (đã dò qua nhiều bán kính)',
     btn_use_min:'Dùng tâm nguy hiểm nhất từ lưới',
-    table_summary:'Bảng tính chi tiết theo từng dải (phương pháp Bishop đơn giản hóa)',
-    th_slice:'Dải', th_layer:'Lớp',
+    table_summary:'Bảng tính chi tiết theo từng mảnh (phương pháp Bishop đơn giản hóa)',
+    th_slice:'Mảnh', th_layer:'Lớp',
     limits_label:'Giới hạn của công cụ:',
-    limits_text:'áp dụng cho mặt trượt tròn (circular slip surface). Bốn phương pháp: Fellenius (OMS), Bishop đơn giản hóa (cân bằng mô men), Janbu đơn giản hóa (cân bằng lực, hệ số hiệu chỉnh f0 theo d/L, dùng b1=0,5 chung cho đất c-φ) và Spencer (thỏa mãn đồng thời cân bằng lực và mô men bằng cách giải thêm góc nghiêng lực giữa các mảnh δ — đây là phương pháp "chuẩn" có xét lực tương tác giữa các mảnh, thường được dùng thay cho phương pháp Bishop chuẩn nguyên bản vì dễ hội tụ hơn). Bảng chi tiết từng dải luôn hiển thị theo cách tính Bishop. Có thể bật chế độ "Đắp" để tách riêng khối đất đắp (phía trên cao độ chân dốc) khỏi nền đất tự nhiên — khối đắp dùng γ, c, φ riêng, nền tự nhiên vẫn theo địa tầng 5 lớp. Nền đất tối đa 5 lớp với ranh giới nằm ngang (không nghiêng theo địa tầng thực); chỉ tiêu c, φ dùng để tính sức chống cắt tại đáy mỗi dải lấy theo lớp (hoặc khối đắp) chứa điểm đáy đó. Lớp 5 coi là nền cứng/đá gốc — mặt trượt chạm tới ranh giới này sẽ bị coi là không hợp lệ. Áp lực nước lỗ rỗng xấp xỉ theo hệ số ru dùng chung cho mọi lớp, không mô phỏng lưới thấm hay mực nước ngầm thực tế. Không xét tải trọng động đất, mặt trượt phi tròn, địa tầng nghiêng/phức tạp, cốt gia cường (neo, cọc, vải địa kỹ thuật) hay hiệu ứng 3D. Dùng cho mục đích học tập/sơ bộ — với công trình thực tế cần kiểm tra bằng phần mềm chuyên dụng (SLOPE/W, GeoStudio, Plaxis…) và tiêu chuẩn hiện hành (TCVN 4253, 22TCN…).',
+    limits_text:'áp dụng cho mặt trượt trụ tròn (circular slip surface). Năm phương pháp: Fellenius (OMS), Bishop đơn giản hóa (cân bằng mô men), Janbu đơn giản hóa (cân bằng lực, hệ số hiệu chỉnh f0 theo d/L, dùng b1=0,5 chung cho đất c-φ), Spencer và Morgenstern-Price (cả hai đều thỏa mãn đồng thời cân bằng lực và mô men bằng cách giải thêm ẩn số về lực giữa các mảnh — Spencer giả thiết tỉ số lực cắt/lực pháp tuyến không đổi giữa các mảnh (góc δ không đổi), Morgenstern-Price giả thiết tỉ số đó biến thiên theo hàm nửa hình sin dọc mặt trượt; cả hai là cách hiện đại để thực hiện phương pháp Bishop chuẩn/rigorous có xét lực tương tác giữa các mảnh, thay cho thủ tục thử dần nguyên bản của Bishop 1955 vì dễ hội tụ và có nghiệm xác định hơn — hai phương pháp thường cho FS rất gần nhau, chênh lệch giữa chúng phần nào phản ánh mức độ nhạy của bài toán với giả thiết phân bố lực giữa các mảnh). Bảng chi tiết từng mảnh luôn hiển thị theo cách tính Bishop. Có thể bật chế độ "Đắp" để tách riêng khối đất đắp (phía trên cao độ chân dốc) khỏi nền đất tự nhiên — khối đắp dùng γ, c, φ riêng, nền tự nhiên vẫn theo địa tầng 5 lớp. Nền đất tối đa 5 lớp với ranh giới nằm ngang (không nghiêng theo địa tầng thực); chỉ tiêu c, φ dùng để tính sức chống cắt tại đáy mỗi mảnh lấy theo lớp (hoặc khối đắp) chứa điểm đáy đó. Lớp 5 coi là nền cứng/đá gốc — mặt trượt chạm tới ranh giới này sẽ bị coi là không hợp lệ. Áp lực nước lỗ rỗng xấp xỉ theo hệ số ru dùng chung cho mọi lớp, không mô phỏng lưới thấm hay mực nước ngầm thực tế. Không xét tải trọng động đất, mặt trượt phi tròn, địa tầng nghiêng/phức tạp, cốt gia cường (neo, cọc, vải địa kỹ thuật) hay hiệu ứng 3D. Dùng cho mục đích học tập/sơ bộ — với công trình thực tế cần kiểm tra bằng phần mềm chuyên dụng (SLOPE/W, GeoStudio, Plaxis…) và tiêu chuẩn hiện hành (TCVN 4253, 22TCN…).',
     verdict_invalid:'không hợp lệ', verdict_unstable:'không ổn định',
     verdict_marginal:'cần kiểm tra thêm', verdict_stable:'ổn định',
+    footer_heading:'Giới thiệu',
+    footer_about_text:'Công cụ tính toán ổn định mái dốc trực tuyến, dùng cho mục đích giảng dạy và tính sơ bộ nhanh: phân tích mặt trượt trụ tròn bằng phương pháp phân mảnh, hỗ trợ nhiều phương pháp kiểm toán (Fellenius, Bishop, Janbu, Spencer, Morgenstern-Price), nền đất nhiều lớp và đất đắp. Toàn bộ tính toán chạy ngay trên trình duyệt, không gửi dữ liệu lên máy chủ nào.',
+    footer_dept:'Bộ môn Đường bộ — Trường Đại học Giao thông Vận tải',
+    footer_visits:'Lượt truy cập trên thiết bị này',
+    footer_visits_note:'Đếm cục bộ trên trình duyệt này — vì đây là file tĩnh không có máy chủ nên không phải bộ đếm chung toàn cầu.',
+    standards_heading:'Tiêu chuẩn tham khảo',
+    std_4054:'— Đường ô tô — Yêu cầu thiết kế. Quy định độ dốc mái taluy đào/đắp, phân cấp bậc thềm khi mái cao hoặc qua nhiều tầng địa chất khác nhau (Bảng 24, 25).',
+    std_262:'— Quy trình khảo sát thiết kế nền đường ô tô đắp trên đất yếu (Bộ GTVT). Quy định hệ số ổn định tối thiểu Kmin: 1,20 theo phương pháp phân mảnh cổ điển mặt trượt tròn (1,10 nếu dùng kết quả cắt nhanh không thoát nước), 1,40 theo phương pháp Bishop.',
+    std_41:'— Tiêu chuẩn khảo sát, thiết kế nền đường ô tô trên nền đất yếu (Tổng cục Đường bộ VN, biên soạn trên cơ sở cập nhật 22 TCN 262-2000, dự kiến tiến tới thay thế bằng TCVN chính thức). Dùng phương pháp Bishop làm phương pháp cơ bản; quy định Kmin theo giai đoạn: 1,20 trong quá trình thi công, 1,40 trong quá trình khai thác (giảm 0,1 nếu xét tải trọng động đất). Áp dụng cho cả đường cao tốc và các cấp đường ô tô khác.',
+    std_4253:'— Công trình thủy lợi — Nền các công trình thủy công — Yêu cầu thiết kế. Đánh giá ổn định mái dốc theo phương pháp hệ số an toàn riêng phần (hệ số tin cậy Kn, hệ số tổ hợp tải trọng nc), khác cách tiếp cận FS đơn của công cụ này — chỉ dùng để đối chiếu phương pháp luận.',
+    std_5729:'— Đường ô tô cao tốc — Yêu cầu thiết kế. Yêu cầu tương tự TCVN 4054 áp dụng cho đường ô tô cao tốc.',
+    standards_disclaimer:'Số liệu tiêu chuẩn nêu trên mang tính tham khảo, có thể đã được sửa đổi/thay thế — luôn kiểm tra lại bản tiêu chuẩn hiện hành trước khi áp dụng cho hồ sơ thiết kế thực tế.',
+    ref_kmin_classical:kmin=>`Theo 22 TCN 262-2000: FSmin = ${kmin} (phương pháp phân mảnh cổ điển)`,
+    ref_kmin_bishop:kmin=>`Theo 22 TCN 262-2000: FSmin = ${kmin} (phương pháp Bishop; dùng tham khảo cho Spencer/Morgenstern-Price)`,
+    ref_pass:'— đạt', ref_fail:'— CHƯA đạt',
     msg_bedrock:'mặt trượt chạm nền cứng', msg_invalid_surface:'mặt trượt không hợp lệ',
     search_scanning:'Đang quét lưới tâm trượt...',
     search_found:fs=>`Đã tìm thấy cung nguy hiểm nhất: FS ≈ ${fs}`,
@@ -430,7 +522,7 @@ const I18N={
   },
   en:{
     title:'Slope stability — circular slip surface',
-    subtitle:'Computes the factor of safety using the Fellenius (Ordinary Method of Slices) and simplified Bishop methods, 2D method-of-slices analysis, up to 5 soil layers.',
+    subtitle:'Computes the factor of safety for circular slip surfaces using the method of slices — supports Fellenius (OMS), simplified Bishop, simplified Janbu, Spencer, and Morgenstern-Price; up to 5 soil layers, with optional embankment fill separation.',
     credit:'Developed by: Dr. Đặng Minh Tân — University of Transport and Communications',
     badge_layers:'5 soil layers',
     panel_geometry:'Slope geometry',
@@ -453,6 +545,7 @@ const I18N={
     label_method:'Method used for search & verdict',
     method_bishop:'Bishop simplified', method_fellenius:'Fellenius (OMS)', method_janbu:'Janbu simplified',
     method_spencer:'Spencer (rigorous, with interslice forces)',
+    method_mp:'Morgenstern-Price (rigorous, half-sine)',
     label_Xc:'Center Xc', label_Yc:'Center Yc', label_R:'Radius R', label_n:'Number of slices',
     btn_search:'Find critical slip surface',
     btn_contour:'Draw center grid & FS contour lines',
@@ -461,7 +554,7 @@ const I18N={
     legend_safe:'FS ≥ 1.50 stable',
     legend_warn:'1.00 ≤ FS < 1.50 needs review',
     legend_danger:'FS < 1.00 unstable',
-    stat_fellenius:'FS — Fellenius', stat_bishop:'FS — Bishop', stat_janbu:'FS — Janbu', stat_spencer:'FS — Spencer',
+    stat_fellenius:'FS — Fellenius', stat_bishop:'FS — Bishop', stat_janbu:'FS — Janbu', stat_spencer:'FS — Spencer', stat_mp:'FS — Morgenstern-Price',
     stat_width:'Slide mass width', stat_depth:'Maximum slip depth',
     contour_heading:'Trial-center grid & FS contour lines',
     contour_low:'FS ≤ 1.0', contour_mid:'FS ≈ 1.5', contour_high:'FS ≥ 2.5',
@@ -470,9 +563,24 @@ const I18N={
     table_summary:'Detailed per-slice calculation (simplified Bishop method)',
     th_slice:'Slice', th_layer:'Layer',
     limits_label:'Tool limitations:',
-    limits_text:'applies to circular slip surfaces only. Four methods: Fellenius (OMS), simplified Bishop (moment equilibrium), simplified Janbu (force equilibrium, f0 correction based on d/L, using a general b1=0.5 for c-φ soil) and Spencer (satisfies both force and moment equilibrium by additionally solving for the interslice force inclination δ — this is the "rigorous" method that accounts for interslice force interaction, generally used today in place of the original rigorous Bishop method since it converges more reliably). The detailed per-slice table always shows the Bishop breakdown. A "Fill" mode can be enabled to separate newly placed fill (above the toe elevation) from the natural foundation soil — the fill uses its own γ, c, φ, while the natural ground still follows the 5-layer stratigraphy. Up to 5 soil layers with horizontal boundaries (not following actual dipping strata); the c, φ used for shear strength at each slice base are taken from the layer (or fill) containing that base point. Layer 5 is treated as bedrock/a rigid stratum — a slip surface reaching this boundary is treated as invalid. Pore pressure is approximated with a single ru ratio applied to all layers, not a real seepage mesh or water table. Seismic loading, non-circular slip surfaces, complex/dipping strata, reinforcement (anchors, piles, geogrids) and 3D effects are not considered. For learning/preliminary use only — real projects should be checked with dedicated software (SLOPE/W, GeoStudio, Plaxis…) and current design standards.',
+    limits_text:'applies to circular slip surfaces only. Five methods: Fellenius (OMS), simplified Bishop (moment equilibrium), simplified Janbu (force equilibrium, f0 correction based on d/L, using a general b1=0.5 for c-φ soil), Spencer and Morgenstern-Price (both satisfy force and moment equilibrium simultaneously by solving for an additional interslice-force unknown — Spencer assumes a constant shear/normal force ratio between slices (constant angle δ), Morgenstern-Price assumes that ratio varies along the slip surface following a half-sine function; both are the modern way of carrying out the rigorous Bishop method with interslice force interaction, replacing Bishop\'s original 1955 trial-and-adjustment procedure since they converge more reliably to a well-defined solution — the two usually give very close FS values, and the gap between them gives a sense of how sensitive the result is to the assumed interslice force distribution). The detailed per-slice table always shows the Bishop breakdown. A "Fill" mode can be enabled to separate newly placed fill (above the toe elevation) from the natural foundation soil — the fill uses its own γ, c, φ, while the natural ground still follows the 5-layer stratigraphy. Up to 5 soil layers with horizontal boundaries (not following actual dipping strata); the c, φ used for shear strength at each slice base are taken from the layer (or fill) containing that base point. Layer 5 is treated as bedrock/a rigid stratum — a slip surface reaching this boundary is treated as invalid. Pore pressure is approximated with a single ru ratio applied to all layers, not a real seepage mesh or water table. Seismic loading, non-circular slip surfaces, complex/dipping strata, reinforcement (anchors, piles, geogrids) and 3D effects are not considered. For learning/preliminary use only — real projects should be checked with dedicated software (SLOPE/W, GeoStudio, Plaxis…) and current design standards.',
     verdict_invalid:'invalid', verdict_unstable:'unstable',
     verdict_marginal:'needs review', verdict_stable:'stable',
+    footer_heading:'About',
+    footer_about_text:'An online slope stability calculator built for teaching and quick preliminary checks: circular slip surface analysis using the method of slices, with several verification methods (Fellenius, Bishop, Janbu, Spencer, Morgenstern-Price), multi-layer soil, and embankment fill. All computation runs directly in your browser — no data is sent to any server.',
+    footer_dept:'Department of Highway and Traffic Engineering — University of Transport and Communications',
+    footer_visits:'Visits on this device',
+    footer_visits_note:'Counted locally in this browser — since this is a static file with no server, it is not a shared global counter.',
+    standards_heading:'Reference standards',
+    std_4054:'— Highway — Design requirements. Specifies cut/fill slope ratios and bench/berm requirements for tall slopes or slopes crossing multiple geological layers (Tables 24, 25).',
+    std_262:'— Survey and design procedure for road embankments on soft soil (Vietnam Ministry of Transport). Specifies minimum stability factor Kmin: 1.20 for the classical method of slices on a circular slip surface (1.10 if using unconsolidated-undrained quick shear test results), 1.40 for the Bishop method.',
+    std_41:'— Specification for survey and design of highway embankment on soft ground (Vietnam Directorate for Roads, built on an update of 22 TCN 262-2000, intended to eventually be replaced by a formal TCVN). Uses the Bishop method as the base method; specifies Kmin by stage: 1.20 during construction, 1.40 during service (reduced by 0.1 when seismic loading is considered). Applies to expressways and all other road classes.',
+    std_4253:'— Hydraulic works — Foundations of hydraulic structures — Design requirements. Assesses slope stability using a partial-safety-factor approach (reliability coefficient Kn, load combination coefficient nc), a different approach from this tool\'s single FS — included for methodological comparison only.',
+    std_5729:'— Expressways (highway class) — Design requirements. Similar requirements to TCVN 4054, applied to expressways.',
+    standards_disclaimer:'The standard figures above are for reference only and may have been revised or superseded — always check the current version of the standard before applying it to an actual design.',
+    ref_kmin_classical:kmin=>`Per 22 TCN 262-2000: FSmin = ${kmin} (classical method of slices)`,
+    ref_kmin_bishop:kmin=>`Per 22 TCN 262-2000: FSmin = ${kmin} (Bishop method; used here as a reference for Spencer/Morgenstern-Price too)`,
+    ref_pass:'— meets requirement', ref_fail:'— does NOT meet requirement',
     msg_bedrock:'slip surface reaches bedrock', msg_invalid_surface:'invalid slip surface',
     search_scanning:'Scanning trial-center grid...',
     search_found:fs=>`Critical surface found: FS ≈ ${fs}`,
@@ -739,12 +847,73 @@ function fsSpencer(slices){
   return {fs:fsGuess, delta:midD, converged:false};
 }
 
-function computeMethodFS(slices,width,maxDepth,method){
+function mpSliceForcesFS(slices,xL,xR,lambda,fsInit){
+  const span=xR-xL;
+  function fShape(x){ return span>0 ? Math.sin(Math.PI*(x-xL)/span) : 0; }
+  const n=slices.length;
+  const interfaceX=[];
+  for(let i=0;i<=n;i++) interfaceX.push(xL+(xR-xL)*i/n);
+  let FS=fsInit>0?fsInit:1.5;
+  let denomMoment=0;
+  for(const s of slices) denomMoment+=s.W*Math.sin(s.alpha);
+  if(Math.abs(denomMoment)<1e-9) return null;
+  let lastE=0;
+  for(let iter=0; iter<40; iter++){
+    let E=0, numMoment=0;
+    for(let i=0;i<n;i++){
+      const s=slices[i];
+      const phiRad=s.phi*Math.PI/180;
+      const k=lambda*fShape(interfaceX[i+1]);
+      const Xi=lambda*fShape(interfaceX[i])*E;
+      let denom=(Math.cos(s.alpha)+k*Math.sin(s.alpha))+(Math.tan(phiRad)/FS)*(Math.sin(s.alpha)-k*Math.cos(s.alpha));
+      if(Math.abs(denom)<0.05) denom = denom<0 ? -0.05 : 0.05;
+      const N=(s.W - Xi + k*E - (s.c*s.l/FS)*(Math.sin(s.alpha)-k*Math.cos(s.alpha)))/denom;
+      const T=(s.c*s.l + N*Math.tan(phiRad))/FS;
+      numMoment += s.c*s.l + N*Math.tan(phiRad);
+      E = E - N*Math.sin(s.alpha) + T*Math.cos(s.alpha);
+    }
+    lastE=E;
+    const newFS=numMoment/denomMoment;
+    if(!isFinite(newFS)||newFS<=0) return null;
+    if(Math.abs(newFS-FS)<1e-5){ FS=newFS; break; }
+    FS=newFS;
+  }
+  return {FS,residual:lastE};
+}
+function fsMorgensternPrice(slices,xL,xR){
+  const candidates=[-1.2,-0.6,-0.2,0,0.3,0.7,1.2,1.8,2.5];
+  let fsGuess=1.3;
+  const evals=[];
+  for(const lam of candidates){
+    const r=mpSliceForcesFS(slices,xL,xR,lam,fsGuess);
+    if(r){ fsGuess=r.FS; evals.push({lam,r}); }
+  }
+  let bracket=null;
+  for(let i=0;i<evals.length-1;i++){ if(evals[i].r.residual*evals[i+1].r.residual<0){ bracket=[evals[i],evals[i+1]]; break; } }
+  if(!bracket) return null;
+  let [lo,hi]=bracket;
+  let midR=null, midLam=0;
+  const totalW=slices.reduce((a,s)=>a+s.W,0);
+  for(let iter=0; iter<35; iter++){
+    midLam=(lo.lam+hi.lam)/2;
+    const r=mpSliceForcesFS(slices,xL,xR,midLam,(lo.r.FS+hi.r.FS)/2);
+    if(!r) break;
+    midR=r;
+    if(Math.abs(r.residual) < 1e-4*Math.max(1,totalW)){
+      return {fs:r.FS, lambda:midLam, converged:true};
+    }
+    if(lo.r.residual*r.residual<0){ hi={lam:midLam,r}; } else { lo={lam:midLam,r}; }
+  }
+  return midR ? {fs:midR.FS, lambda:midLam, converged:false} : null;
+}
+
+function computeMethodFS(slices,width,maxDepth,method,xL,xR){
   const fel=fsFellenius(slices);
   if(!fel) return null;
   if(method==='fellenius') return fel.fs;
   if(method==='janbu'){ const j=fsJanbu(slices,width,maxDepth); return j? j.fs : null; }
   if(method==='spencer'){ const sp=fsSpencer(slices); return sp? sp.fs : null; }
+  if(method==='mp'){ const mp=fsMorgensternPrice(slices,xL,xR); return mp? mp.fs : null; }
   return fsBishop(slices,fel.fs,fel.den);
 }
 
@@ -996,13 +1165,15 @@ function recompute(triggerRedraw){
     fsFEl.textContent='—'; fsBEl.textContent='—';
     document.getElementById('fs-janbu').textContent='—';
     document.getElementById('fs-spencer').textContent='—';
+    document.getElementById('fs-mp').textContent='—';
     stampVal.textContent='—';
     stampLabel.textContent = (result && result.invalid==='bedrock') ? t('msg_bedrock') : t('msg_invalid_surface');
     stamp.style.borderColor='var(--ink-faint)'; stampVal.style.color='var(--ink-faint)';
     const methodSelInv=document.getElementById('method-select').value;
-    document.getElementById('stamp-method').textContent = methodSelInv==='fellenius' ? t('method_fellenius') : methodSelInv==='janbu' ? t('method_janbu') : methodSelInv==='spencer' ? t('method_spencer') : t('method_bishop');
+    document.getElementById('stamp-method').textContent = methodSelInv==='fellenius' ? t('method_fellenius') : methodSelInv==='janbu' ? t('method_janbu') : methodSelInv==='spencer' ? t('method_spencer') : methodSelInv==='mp' ? t('method_mp') : t('method_bishop');
     document.getElementById('stat-width').textContent='—';
     document.getElementById('stat-depth').textContent='—';
+    document.getElementById('ref-standard-note').textContent='';
     tbody.innerHTML='';
     footNum.textContent='—'; footDen.textContent='—';
     drawDiagram(p,run,null);
@@ -1019,15 +1190,18 @@ function recompute(triggerRedraw){
   const fsJ = jan ? jan.fs : null;
   const spen = fsSpencer(result.slices);
   const fsS = spen ? spen.fs : null;
+  const mpr = fsMorgensternPrice(result.slices, result.xL, result.xR);
+  const fsMP = mpr ? mpr.fs : null;
 
   fsFEl.textContent = fsF!==null ? fmt(fsF,3) : '—';
   fsBEl.textContent = fsB!==null ? fmt(fsB,3) : '—';
   document.getElementById('fs-janbu').textContent = fsJ!==null ? fmt(fsJ,3) : '—';
   document.getElementById('fs-spencer').textContent = fsS!==null ? fmt(fsS,3) : '—';
+  document.getElementById('fs-mp').textContent = fsMP!==null ? fmt(fsMP,3) : '—';
 
   const methodSel=document.getElementById('method-select').value;
-  const fsPrimary = methodSel==='fellenius' ? fsF : methodSel==='janbu' ? fsJ : methodSel==='spencer' ? fsS : fsB;
-  const methodLabel = methodSel==='fellenius' ? t('method_fellenius') : methodSel==='janbu' ? t('method_janbu') : methodSel==='spencer' ? t('method_spencer') : t('method_bishop');
+  const fsPrimary = methodSel==='fellenius' ? fsF : methodSel==='janbu' ? fsJ : methodSel==='spencer' ? fsS : methodSel==='mp' ? fsMP : fsB;
+  const methodLabel = methodSel==='fellenius' ? t('method_fellenius') : methodSel==='janbu' ? t('method_janbu') : methodSel==='spencer' ? t('method_spencer') : methodSel==='mp' ? t('method_mp') : t('method_bishop');
   document.getElementById('stamp-method').textContent = methodLabel;
 
   const v=verdict(fsPrimary);
@@ -1038,6 +1212,17 @@ function recompute(triggerRedraw){
 
   document.getElementById('stat-width').textContent=fmt(width,1)+' m';
   document.getElementById('stat-depth').textContent=fmt(maxDepth,1)+' m';
+
+  const refNote=document.getElementById('ref-standard-note');
+  if(fsPrimary!==null && isFinite(fsPrimary)){
+    const isClassical = (methodSel==='fellenius' || methodSel==='janbu');
+    const kmin = isClassical ? 1.20 : 1.40;
+    const passes = fsPrimary >= kmin;
+    const refText = isClassical ? t('ref_kmin_classical', kmin.toFixed(2)) : t('ref_kmin_bishop', kmin.toFixed(2));
+    refNote.innerHTML = `${refText} <b style="color:${passes?'var(--safe)':'var(--danger)'}">${passes? t('ref_pass') : t('ref_fail')}</b>`;
+  } else {
+    refNote.textContent='';
+  }
 
   let rows='', sumNum=0, sumDen=0;
   result.slices.forEach((s,i)=>{
@@ -1079,7 +1264,7 @@ function gridSearch(){
           if(width < run*0.25 || width > run*3.5) continue;
           const maxDepth=Math.max(...result.slices.map(s=>s.h));
           if(maxDepth < p.H*0.04) continue;
-          const fsM=computeMethodFS(result.slices,width,maxDepth,method);
+          const fsM=computeMethodFS(result.slices,width,maxDepth,method,result.xL,result.xR);
           if(!isFinite(fsM) || fsM===null || fsM<=0.05) continue;
           if(!best || fsM<best.fsB){
             best={Xc,Yc,R,fsB:fsM};
@@ -1100,6 +1285,19 @@ function gridSearch(){
 }
 
 function clamp(v,lo,hi){ return Math.max(lo,Math.min(hi,v)); }
+
+function initVisitCounter(){
+  const el=document.getElementById('visit-count');
+  try {
+    let count=parseInt(localStorage.getItem('slope_app_visit_count')||'0',10);
+    if(!isFinite(count)||count<0) count=0;
+    count+=1;
+    localStorage.setItem('slope_app_visit_count', String(count));
+    el.textContent=count;
+  } catch(e){
+    el.textContent='—';
+  }
+}
 
 function computeFSGrid(p,run){
   const nx=26, ny=18, nR=13, sampleN=300;
@@ -1122,7 +1320,7 @@ function computeFSGrid(p,run){
         if(width<run*0.25||width>run*3.5) continue;
         const maxDepth=Math.max(...result.slices.map(s=>s.h));
         if(maxDepth<p.H*0.04) continue;
-        const fsM=computeMethodFS(result.slices,width,maxDepth,method);
+        const fsM=computeMethodFS(result.slices,width,maxDepth,method,result.xL,result.xR);
         if(fsM===null||!isFinite(fsM)||fsM<=0.05) continue;
         if(minFS===null||fsM<minFS){ minFS=fsM; bestR=R; }
       }
@@ -1370,7 +1568,8 @@ lastL = parseFloat(el.H.value) + parseFloat(el.H.value)*parseFloat(el.m.value);
 loadLayerIntoFields(1);
 updateTotalDepth();
 drawStratMini();
-recompute();
+applyLanguage('vi');
+initVisitCounter();
 </script>
 </body>
 </html>
