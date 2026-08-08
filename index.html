@@ -37,6 +37,13 @@
   }
   header .sub{font-size:12.5px; color:var(--ink-dim); margin-top:4px; max-width:520px; line-height:1.5;}
   header .credit{font-size:11px; color:var(--ink-faint); margin-top:6px; font-style:italic;}
+  .lang-toggle{display:flex; gap:4px; margin-top:8px;}
+  .lang-btn{
+    background:var(--panel2); border:1px solid var(--line); color:var(--ink-dim);
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:4px 10px;
+    border-radius:5px; cursor:pointer; letter-spacing:0.04em;
+  }
+  .lang-btn.active{background:var(--accent); border-color:var(--accent-strong); color:#fff;}
   header .badge-row{display:flex; gap:8px; font-size:11px; color:var(--ink-faint); font-family:'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:0.06em;}
   header .badge-row span{border:1px solid var(--line); border-radius:3px; padding:3px 7px;}
 
@@ -141,38 +148,44 @@
 
   <header>
     <div>
-      <h1>Ổn định mái dốc — mặt trượt tròn</h1>
-      <div class="sub">Tính hệ số an toàn theo phương pháp Fellenius (Ordinary Method of Slices) và Bishop đơn giản hóa, phân tích mặt cắt 2D bằng phương pháp chia dải, nền đất tối đa 5 lớp.</div>
-      <div class="credit">Phát triển: TS. Đặng Minh Tân — Trường Đại học Giao thông vận tải</div>
+      <h1 data-i18n="title">Ổn định mái dốc — mặt trượt tròn</h1>
+      <div class="sub" data-i18n="subtitle">Tính hệ số an toàn theo phương pháp Fellenius (Ordinary Method of Slices) và Bishop đơn giản hóa, phân tích mặt cắt 2D bằng phương pháp chia dải, nền đất tối đa 5 lớp.</div>
+      <div class="credit" data-i18n="credit">Phát triển: TS. Đặng Minh Tân — Trường Đại học Giao thông vận tải</div>
     </div>
-    <div class="badge-row"><span>Fellenius</span><span>Bishop simplified</span><span>5 lớp đất</span></div>
+    <div>
+      <div class="badge-row"><span>Fellenius</span><span>Bishop simplified</span><span data-i18n="badge_layers">5 lớp đất</span></div>
+      <div class="lang-toggle">
+        <button type="button" class="lang-btn active" id="lang-vi">VI</button>
+        <button type="button" class="lang-btn" id="lang-en">EN</button>
+      </div>
+    </div>
   </header>
 
   <div class="layout">
     <aside>
       <div class="panel">
-        <h2>Hình học mái dốc</h2>
+        <h2 data-i18n="panel_geometry">Hình học mái dốc</h2>
         <div class="field">
-          <label>Chiều cao mái dốc H <b id="v-H">8.0 m</b></label>
+          <label><span data-i18n="label_H">Chiều cao mái dốc H</span> <b id="v-H">8.0 m</b></label>
           <input type="range" id="H" min="2" max="30" step="0.5" value="8">
         </div>
         <div class="field">
-          <label>Hệ số mái dốc m (ngang : đứng = m : 1) <b id="v-m">1.50</b></label>
+          <label><span data-i18n="label_m">Hệ số mái dốc m (ngang : đứng = m : 1)</span> <b id="v-m">1.50</b></label>
           <input type="range" id="m" min="0.5" max="3" step="0.05" value="1.5">
-          <div class="field-note">m = 1.5 nghĩa là mái dốc 1:1.5 (đứng 1, ngang 1.5)</div>
+          <div class="field-note" data-i18n="note_m">m = 1.5 nghĩa là mái dốc 1:1.5 (đứng 1, ngang 1.5)</div>
         </div>
       </div>
 
       <div class="panel">
-        <h2>Địa tầng — 5 lớp đất</h2>
+        <h2 data-i18n="panel_strat">Địa tầng — 5 lớp đất</h2>
         <div class="strat-row">
           <svg id="strat-mini" viewBox="0 0 40 160" class="strat-svg"></svg>
           <div class="strat-tabs" id="layer-tabs">
-            <button type="button" class="tab-btn active" data-layer="1">Lớp 1</button>
-            <button type="button" class="tab-btn" data-layer="2">Lớp 2</button>
-            <button type="button" class="tab-btn" data-layer="3">Lớp 3</button>
-            <button type="button" class="tab-btn" data-layer="4">Lớp 4</button>
-            <button type="button" class="tab-btn" data-layer="5">Lớp 5 · nền cứng</button>
+            <button type="button" class="tab-btn active" data-layer="1" data-i18n="tab_1">Lớp 1</button>
+            <button type="button" class="tab-btn" data-layer="2" data-i18n="tab_2">Lớp 2</button>
+            <button type="button" class="tab-btn" data-layer="3" data-i18n="tab_3">Lớp 3</button>
+            <button type="button" class="tab-btn" data-layer="4" data-i18n="tab_4">Lớp 4</button>
+            <button type="button" class="tab-btn" data-layer="5" data-i18n="tab_5">Lớp 5 · nền cứng</button>
           </div>
         </div>
 
@@ -181,56 +194,56 @@
             <div class="field">
               <label>γ <b id="v-Lgamma">—</b></label>
               <input type="range" id="Lgamma" min="14" max="24" step="0.5" value="16.5">
-              <div class="field-note">kN/m³</div>
+              <div class="field-note" data-i18n="unit_kNm3">kN/m³</div>
             </div>
             <div class="field">
               <label>c <b id="v-Lc">—</b></label>
               <input type="range" id="Lc" min="0" max="100" step="1" value="6">
-              <div class="field-note">kPa</div>
+              <div class="field-note" data-i18n="unit_kPa">kPa</div>
             </div>
           </div>
           <div class="field">
-            <label>φ (góc ma sát trong) <b id="v-Lphi">—</b></label>
+            <label><span data-i18n="label_phi">φ (góc ma sát trong)</span> <b id="v-Lphi">—</b></label>
             <input type="range" id="Lphi" min="0" max="45" step="0.5" value="8">
           </div>
           <div class="field" id="field-Lt">
-            <label>Chiều dày lớp <b id="v-Lt">—</b></label>
+            <label><span data-i18n="label_t">Chiều dày lớp</span> <b id="v-Lt">—</b></label>
             <input type="range" id="Lt" min="0.5" max="20" step="0.5" value="1.5">
           </div>
-          <div class="field-note" id="rigid-note" style="display:none;">Lớp cuối cùng — nền cứng/đá gốc, coi là ranh giới không cho mặt trượt xuyên qua.</div>
+          <div class="field-note" id="rigid-note" data-i18n="rigid_note" style="display:none;">Lớp cuối cùng — nền cứng/đá gốc, coi là ranh giới không cho mặt trượt xuyên qua.</div>
         </div>
 
         <div class="field" style="margin-top:12px;">
-          <label>ru (hệ số áp lực nước lỗ rỗng, áp dụng chung) <b id="v-ru">0.00</b></label>
+          <label><span data-i18n="label_ru">ru (hệ số áp lực nước lỗ rỗng, áp dụng chung)</span> <b id="v-ru">0.00</b></label>
           <input type="range" id="ru" min="0" max="0.5" step="0.05" value="0">
         </div>
-        <div class="field-note" style="margin-top:8px;">Tổng chiều dày 4 lớp trên tới nền cứng: <b id="total-depth" style="font-family:'IBM Plex Mono',monospace; color:var(--ink);">—</b></div>
+        <div class="field-note" style="margin-top:8px;"><span data-i18n="total_depth_label">Tổng chiều dày 4 lớp trên tới nền cứng:</span> <b id="total-depth" style="font-family:'IBM Plex Mono',monospace; color:var(--ink);">—</b></div>
       </div>
 
       <div class="panel">
-        <h2>Mặt trượt tròn (thử dần)</h2>
+        <h2 data-i18n="panel_circle">Mặt trượt tròn (thử dần)</h2>
         <div class="field">
-          <label>Tâm trượt Xc <b id="v-Xc">-3.0 m</b></label>
+          <label><span data-i18n="label_Xc">Tâm trượt Xc</span> <b id="v-Xc">-3.0 m</b></label>
           <input type="range" id="Xc" min="-30" max="30" step="0.2" value="-3">
         </div>
         <div class="field">
-          <label>Tâm trượt Yc <b id="v-Yc">12.0 m</b></label>
+          <label><span data-i18n="label_Yc">Tâm trượt Yc</span> <b id="v-Yc">12.0 m</b></label>
           <input type="range" id="Yc" min="0" max="60" step="0.2" value="12">
         </div>
         <div class="field">
-          <label>Bán kính R <b id="v-R">13.0 m</b></label>
+          <label><span data-i18n="label_R">Bán kính R</span> <b id="v-R">13.0 m</b></label>
           <input type="range" id="R" min="1" max="80" step="0.2" value="13">
         </div>
         <div class="field">
-          <label>Số dải tính toán <b id="v-n">16</b></label>
+          <label><span data-i18n="label_n">Số dải tính toán</span> <b id="v-n">16</b></label>
           <input type="range" id="n" min="6" max="40" step="1" value="16">
         </div>
         <div class="field" style="margin-top:14px;">
-          <button class="primary" id="btn-search">Tìm cung trượt nguy hiểm nhất</button>
+          <button class="primary" id="btn-search" data-i18n="btn_search">Tìm cung trượt nguy hiểm nhất</button>
           <div class="field-note" id="search-status" style="margin-top:8px;"></div>
         </div>
         <div class="field" style="margin-top:10px;">
-          <button id="btn-contour">Vẽ lưới tâm trượt &amp; đường đồng mức FS</button>
+          <button id="btn-contour" data-i18n="btn_contour">Vẽ lưới tâm trượt &amp; đường đồng mức FS</button>
           <div class="field-note" id="contour-status" style="margin-top:8px;"></div>
         </div>
       </div>
@@ -247,42 +260,42 @@
       </div>
 
       <div class="legend">
-        <span><i style="background:var(--layer1);border:1px solid var(--layer1-b);"></i>Màu lớp đất — xem cột địa tầng bên trái</span>
-        <span><i style="background:var(--accent);"></i>Cung trượt tròn</span>
-        <span><i style="background:var(--safe);"></i>FS ≥ 1.50 ổn định</span>
-        <span><i style="background:var(--warn);"></i>1.00 ≤ FS &lt; 1.50 cần kiểm tra</span>
-        <span><i style="background:var(--danger);"></i>FS &lt; 1.00 không ổn định</span>
+        <span><i style="background:var(--layer1);border:1px solid var(--layer1-b);"></i><span data-i18n="legend_layers">Màu lớp đất — xem cột địa tầng bên trái</span></span>
+        <span><i style="background:var(--accent);"></i><span data-i18n="legend_circle">Cung trượt tròn</span></span>
+        <span><i style="background:var(--safe);"></i><span data-i18n="legend_safe">FS ≥ 1.50 ổn định</span></span>
+        <span><i style="background:var(--warn);"></i><span data-i18n="legend_warn">1.00 ≤ FS &lt; 1.50 cần kiểm tra</span></span>
+        <span><i style="background:var(--danger);"></i><span data-i18n="legend_danger">FS &lt; 1.00 không ổn định</span></span>
       </div>
 
       <div class="results-bar">
-        <div class="stat"><div class="lbl">FS — Fellenius</div><div class="val" id="fs-fellenius">—</div></div>
-        <div class="stat"><div class="lbl">FS — Bishop</div><div class="val" id="fs-bishop">—</div></div>
-        <div class="stat"><div class="lbl">Chiều rộng khối trượt</div><div class="val" id="stat-width">—</div></div>
-        <div class="stat"><div class="lbl">Độ sâu mặt trượt lớn nhất</div><div class="val" id="stat-depth">—</div></div>
+        <div class="stat"><div class="lbl" data-i18n="stat_fellenius">FS — Fellenius</div><div class="val" id="fs-fellenius">—</div></div>
+        <div class="stat"><div class="lbl" data-i18n="stat_bishop">FS — Bishop</div><div class="val" id="fs-bishop">—</div></div>
+        <div class="stat"><div class="lbl" data-i18n="stat_width">Chiều rộng khối trượt</div><div class="val" id="stat-width">—</div></div>
+        <div class="stat"><div class="lbl" data-i18n="stat_depth">Độ sâu mặt trượt lớn nhất</div><div class="val" id="stat-depth">—</div></div>
       </div>
 
       <div class="panel" id="contour-section" style="margin-top:16px; display:none;">
-        <h2>Lưới tâm trượt &amp; đường đồng mức FS</h2>
+        <h2 data-i18n="contour_heading">Lưới tâm trượt &amp; đường đồng mức FS</h2>
         <div class="canvas-wrap">
           <svg id="contour-diagram" viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg"></svg>
         </div>
         <div class="legend" style="margin-top:10px;">
-          <span><i style="background:rgb(196,57,47);"></i>FS ≤ 1,0</span>
-          <span><i style="background:rgb(176,114,8);"></i>FS ≈ 1,5</span>
-          <span><i style="background:rgb(30,138,87);"></i>FS ≥ 2,5</span>
-          <span>Mỗi chấm = FS nhỏ nhất tìm được tại tâm đó (đã dò qua nhiều bán kính)</span>
+          <span><i style="background:rgb(196,57,47);"></i><span data-i18n="contour_low">FS ≤ 1,0</span></span>
+          <span><i style="background:rgb(176,114,8);"></i><span data-i18n="contour_mid">FS ≈ 1,5</span></span>
+          <span><i style="background:rgb(30,138,87);"></i><span data-i18n="contour_high">FS ≥ 2,5</span></span>
+          <span data-i18n="contour_note">Mỗi chấm = FS nhỏ nhất tìm được tại tâm đó (đã dò qua nhiều bán kính)</span>
         </div>
         <div class="field" style="margin-top:10px;">
-          <button class="primary" id="btn-use-min" style="display:none;">Dùng tâm nguy hiểm nhất từ lưới</button>
+          <button class="primary" id="btn-use-min" data-i18n="btn_use_min" style="display:none;">Dùng tâm nguy hiểm nhất từ lưới</button>
         </div>
       </div>
 
       <details class="slice-table">
-        <summary>Bảng tính chi tiết theo từng dải (phương pháp Bishop đơn giản hóa)</summary>
+        <summary data-i18n="table_summary">Bảng tính chi tiết theo từng dải (phương pháp Bishop đơn giản hóa)</summary>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>Dải</th><th>Lớp</th><th>b (m)</th><th>h (m)</th><th>α (°)</th><th>W (kN/m)</th><th>c·b+(W−u·b)tanφ</th><th>mα</th><th>W·sinα</th></tr>
+              <tr><th data-i18n="th_slice">Dải</th><th data-i18n="th_layer">Lớp</th><th>b (m)</th><th>h (m)</th><th>α (°)</th><th>W (kN/m)</th><th>c·b+(W−u·b)tanφ</th><th>mα</th><th>W·sinα</th></tr>
             </thead>
             <tbody id="slice-tbody"></tbody>
             <tfoot>
@@ -293,7 +306,7 @@
       </details>
 
       <div class="limits">
-        <b>Giới hạn của công cụ:</b> áp dụng cho mặt trượt tròn (circular slip surface), phương pháp Fellenius (OMS) và Bishop đơn giản hóa (cân bằng mô men, bỏ qua lực giữa các dải). Nền đất tối đa 5 lớp với ranh giới nằm ngang (không nghiêng theo địa tầng thực); chỉ tiêu c, φ dùng để tính sức chống cắt tại đáy mỗi dải lấy theo lớp chứa điểm đáy đó, còn trọng lượng dải cộng dồn theo từng lớp mà dải đi qua. Lớp 5 coi là nền cứng/đá gốc — mặt trượt chạm tới ranh giới này sẽ bị coi là không hợp lệ. Áp lực nước lỗ rỗng xấp xỉ theo hệ số ru dùng chung cho mọi lớp, không mô phỏng lưới thấm hay mực nước ngầm thực tế. Không xét tải trọng động đất, mặt trượt phi tròn, địa tầng nghiêng/phức tạp, cốt gia cường (neo, cọc, vải địa kỹ thuật) hay hiệu ứng 3D. Dùng cho mục đích học tập/sơ bộ — với công trình thực tế cần kiểm tra bằng phần mềm chuyên dụng (SLOPE/W, GeoStudio, Plaxis…) và tiêu chuẩn hiện hành (TCVN 4253, 22TCN…).
+        <b data-i18n="limits_label">Giới hạn của công cụ:</b> <span data-i18n="limits_text">áp dụng cho mặt trượt tròn (circular slip surface), phương pháp Fellenius (OMS) và Bishop đơn giản hóa (cân bằng mô men, bỏ qua lực giữa các dải). Nền đất tối đa 5 lớp với ranh giới nằm ngang (không nghiêng theo địa tầng thực); chỉ tiêu c, φ dùng để tính sức chống cắt tại đáy mỗi dải lấy theo lớp chứa điểm đáy đó, còn trọng lượng dải cộng dồn theo từng lớp mà dải đi qua. Lớp 5 coi là nền cứng/đá gốc — mặt trượt chạm tới ranh giới này sẽ bị coi là không hợp lệ. Áp lực nước lỗ rỗng xấp xỉ theo hệ số ru dùng chung cho mọi lớp, không mô phỏng lưới thấm hay mực nước ngầm thực tế. Không xét tải trọng động đất, mặt trượt phi tròn, địa tầng nghiêng/phức tạp, cốt gia cường (neo, cọc, vải địa kỹ thuật) hay hiệu ứng 3D. Dùng cho mục đích học tập/sơ bộ — với công trình thực tế cần kiểm tra bằng phần mềm chuyên dụng (SLOPE/W, GeoStudio, Plaxis…) và tiêu chuẩn hiện hành (TCVN 4253, 22TCN…).</span>
       </div>
     </main>
   </div>
@@ -305,6 +318,123 @@ const geomIds=['H','m'];
 let lastL=null;
 const el={}; ids.forEach(id=>el[id]=document.getElementById(id));
 const out={}; ids.forEach(id=>out[id]=document.getElementById('v-'+id));
+
+let currentLang='vi';
+
+const I18N={
+  vi:{
+    title:'Ổn định mái dốc — mặt trượt tròn',
+    subtitle:'Tính hệ số an toàn theo phương pháp Fellenius (Ordinary Method of Slices) và Bishop đơn giản hóa, phân tích mặt cắt 2D bằng phương pháp chia dải, nền đất tối đa 5 lớp.',
+    credit:'Phát triển: TS. Đặng Minh Tân — Trường Đại học Giao thông vận tải',
+    badge_layers:'5 lớp đất',
+    panel_geometry:'Hình học mái dốc',
+    label_H:'Chiều cao mái dốc H',
+    label_m:'Hệ số mái dốc m (ngang : đứng = m : 1)',
+    note_m:'m = 1.5 nghĩa là mái dốc 1:1.5 (đứng 1, ngang 1.5)',
+    panel_strat:'Địa tầng — 5 lớp đất',
+    tab_1:'Lớp 1', tab_2:'Lớp 2', tab_3:'Lớp 3', tab_4:'Lớp 4', tab_5:'Lớp 5 · nền cứng',
+    label_phi:'φ (góc ma sát trong)',
+    label_t:'Chiều dày lớp',
+    unit_kNm3:'kN/m³', unit_kPa:'kPa',
+    rigid_note:'Lớp cuối cùng — nền cứng/đá gốc, coi là ranh giới không cho mặt trượt xuyên qua.',
+    label_ru:'ru (hệ số áp lực nước lỗ rỗng, áp dụng chung)',
+    total_depth_label:'Tổng chiều dày 4 lớp trên tới nền cứng:',
+    panel_circle:'Mặt trượt tròn (thử dần)',
+    label_Xc:'Tâm trượt Xc', label_Yc:'Tâm trượt Yc', label_R:'Bán kính R', label_n:'Số dải tính toán',
+    btn_search:'Tìm cung trượt nguy hiểm nhất',
+    btn_contour:'Vẽ lưới tâm trượt & đường đồng mức FS',
+    legend_layers:'Màu lớp đất — xem cột địa tầng bên trái',
+    legend_circle:'Cung trượt tròn',
+    legend_safe:'FS ≥ 1.50 ổn định',
+    legend_warn:'1.00 ≤ FS < 1.50 cần kiểm tra',
+    legend_danger:'FS < 1.00 không ổn định',
+    stat_fellenius:'FS — Fellenius', stat_bishop:'FS — Bishop',
+    stat_width:'Chiều rộng khối trượt', stat_depth:'Độ sâu mặt trượt lớn nhất',
+    contour_heading:'Lưới tâm trượt & đường đồng mức FS',
+    contour_low:'FS ≤ 1,0', contour_mid:'FS ≈ 1,5', contour_high:'FS ≥ 2,5',
+    contour_note:'Mỗi chấm = FS nhỏ nhất tìm được tại tâm đó (đã dò qua nhiều bán kính)',
+    btn_use_min:'Dùng tâm nguy hiểm nhất từ lưới',
+    table_summary:'Bảng tính chi tiết theo từng dải (phương pháp Bishop đơn giản hóa)',
+    th_slice:'Dải', th_layer:'Lớp',
+    limits_label:'Giới hạn của công cụ:',
+    limits_text:'áp dụng cho mặt trượt tròn (circular slip surface), phương pháp Fellenius (OMS) và Bishop đơn giản hóa (cân bằng mô men, bỏ qua lực giữa các dải). Nền đất tối đa 5 lớp với ranh giới nằm ngang (không nghiêng theo địa tầng thực); chỉ tiêu c, φ dùng để tính sức chống cắt tại đáy mỗi dải lấy theo lớp chứa điểm đáy đó, còn trọng lượng dải cộng dồn theo từng lớp mà dải đi qua. Lớp 5 coi là nền cứng/đá gốc — mặt trượt chạm tới ranh giới này sẽ bị coi là không hợp lệ. Áp lực nước lỗ rỗng xấp xỉ theo hệ số ru dùng chung cho mọi lớp, không mô phỏng lưới thấm hay mực nước ngầm thực tế. Không xét tải trọng động đất, mặt trượt phi tròn, địa tầng nghiêng/phức tạp, cốt gia cường (neo, cọc, vải địa kỹ thuật) hay hiệu ứng 3D. Dùng cho mục đích học tập/sơ bộ — với công trình thực tế cần kiểm tra bằng phần mềm chuyên dụng (SLOPE/W, GeoStudio, Plaxis…) và tiêu chuẩn hiện hành (TCVN 4253, 22TCN…).',
+    verdict_invalid:'không hợp lệ', verdict_unstable:'không ổn định',
+    verdict_marginal:'cần kiểm tra thêm', verdict_stable:'ổn định',
+    msg_bedrock:'mặt trượt chạm nền cứng', msg_invalid_surface:'mặt trượt không hợp lệ',
+    search_scanning:'Đang quét lưới tâm trượt...',
+    search_found:fs=>`Đã tìm thấy cung nguy hiểm nhất: FS ≈ ${fs}`,
+    search_notfound:'Không tìm được cung trượt hợp lệ trong phạm vi quét — thử điều chỉnh hình học.',
+    contour_scanning:'Đang quét lưới tâm trượt × bán kính — có thể mất vài giây...',
+    contour_found:(nx,ny,nR,Xc,Yc,R,fs)=>`Quét ${nx}×${ny} tâm × ${nR} bán kính mỗi tâm. Tâm nguy hiểm nhất: Xc=${Xc}m, Yc=${Yc}m, R=${R}m — FS ≈ ${fs}.`,
+    contour_notfound:'Không tìm được tâm trượt hợp lệ nào trong phạm vi quét — thử điều chỉnh hình học hoặc lớp đất.',
+    diagram_crest:'Đỉnh mái', diagram_toe:'Chân mái',
+    diagram_layer:i=>`lớp ${i}`, diagram_rigid:'nền cứng (lớp 5)'
+  },
+  en:{
+    title:'Slope stability — circular slip surface',
+    subtitle:'Computes the factor of safety using the Fellenius (Ordinary Method of Slices) and simplified Bishop methods, 2D method-of-slices analysis, up to 5 soil layers.',
+    credit:'Developed by: Dr. Đặng Minh Tân — University of Transport and Communications',
+    badge_layers:'5 soil layers',
+    panel_geometry:'Slope geometry',
+    label_H:'Slope height H',
+    label_m:'Slope ratio m (horizontal : vertical = m : 1)',
+    note_m:'m = 1.5 means a 1:1.5 slope (1 vertical, 1.5 horizontal)',
+    panel_strat:'Stratigraphy — 5 soil layers',
+    tab_1:'Layer 1', tab_2:'Layer 2', tab_3:'Layer 3', tab_4:'Layer 4', tab_5:'Layer 5 · rigid base',
+    label_phi:'φ (friction angle)',
+    label_t:'Layer thickness',
+    unit_kNm3:'kN/m³', unit_kPa:'kPa',
+    rigid_note:'Last layer — bedrock/rigid stratum, treated as a boundary the slip surface cannot cross.',
+    label_ru:'ru (pore pressure ratio, applied to all layers)',
+    total_depth_label:'Total thickness of the 4 layers above bedrock:',
+    panel_circle:'Trial circular slip surface',
+    label_Xc:'Center Xc', label_Yc:'Center Yc', label_R:'Radius R', label_n:'Number of slices',
+    btn_search:'Find critical slip surface',
+    btn_contour:'Draw center grid & FS contour lines',
+    legend_layers:'Soil layer colors — see stratigraphy column at left',
+    legend_circle:'Circular slip surface',
+    legend_safe:'FS ≥ 1.50 stable',
+    legend_warn:'1.00 ≤ FS < 1.50 needs review',
+    legend_danger:'FS < 1.00 unstable',
+    stat_fellenius:'FS — Fellenius', stat_bishop:'FS — Bishop',
+    stat_width:'Slide mass width', stat_depth:'Maximum slip depth',
+    contour_heading:'Trial-center grid & FS contour lines',
+    contour_low:'FS ≤ 1.0', contour_mid:'FS ≈ 1.5', contour_high:'FS ≥ 2.5',
+    contour_note:'Each dot = the minimum FS found at that center (swept across many radii)',
+    btn_use_min:'Use most critical center from grid',
+    table_summary:'Detailed per-slice calculation (simplified Bishop method)',
+    th_slice:'Slice', th_layer:'Layer',
+    limits_label:'Tool limitations:',
+    limits_text:'applies to circular slip surfaces only, using the Fellenius (OMS) and simplified Bishop methods (moment equilibrium, inter-slice forces ignored). Up to 5 soil layers with horizontal boundaries (not following actual dipping strata); the c, φ used for shear strength at each slice base are taken from the layer containing that base point, while slice weight is accumulated layer by layer through the slice. Layer 5 is treated as bedrock/a rigid stratum — a slip surface reaching this boundary is treated as invalid. Pore pressure is approximated with a single ru ratio applied to all layers, not a real seepage mesh or water table. Seismic loading, non-circular slip surfaces, complex/dipping strata, reinforcement (anchors, piles, geogrids) and 3D effects are not considered. For learning/preliminary use only — real projects should be checked with dedicated software (SLOPE/W, GeoStudio, Plaxis…) and current design standards.',
+    verdict_invalid:'invalid', verdict_unstable:'unstable',
+    verdict_marginal:'needs review', verdict_stable:'stable',
+    msg_bedrock:'slip surface reaches bedrock', msg_invalid_surface:'invalid slip surface',
+    search_scanning:'Scanning trial-center grid...',
+    search_found:fs=>`Critical surface found: FS ≈ ${fs}`,
+    search_notfound:'No valid slip surface found in the search range — try adjusting the geometry.',
+    contour_scanning:'Scanning center grid × radii — this may take a few seconds...',
+    contour_found:(nx,ny,nR,Xc,Yc,R,fs)=>`Scanned ${nx}×${ny} centers × ${nR} radii each. Most critical center: Xc=${Xc}m, Yc=${Yc}m, R=${R}m — FS ≈ ${fs}.`,
+    contour_notfound:'No valid slip surface found in the scanned range — try adjusting the geometry or soil layers.',
+    diagram_crest:'Crest', diagram_toe:'Toe',
+    diagram_layer:i=>`layer ${i}`, diagram_rigid:'rigid base (layer 5)'
+  }
+};
+function t(key,...args){
+  const entry=I18N[currentLang][key];
+  return typeof entry==='function' ? entry(...args) : entry;
+}
+function applyLanguage(lang){
+  currentLang=lang;
+  document.documentElement.lang = lang==='en' ? 'en' : 'vi';
+  document.querySelectorAll('[data-i18n]').forEach(elx=>{
+    const key=elx.getAttribute('data-i18n');
+    if(I18N[lang][key]!==undefined) elx.textContent=I18N[lang][key];
+  });
+  document.getElementById('lang-vi').classList.toggle('active', lang==='vi');
+  document.getElementById('lang-en').classList.toggle('active', lang==='en');
+  recompute();
+  if(lastContourResult) renderContourStatus();
+}
 
 const layerDefaults=[
   {gamma:16.5, c:6,  phi:8,  t:1.5},
@@ -442,10 +572,10 @@ function readInputs(){
 function fmt(v,d){ return isFinite(v) ? v.toFixed(d) : '—'; }
 
 function verdict(fs){
-  if(fs===null || !isFinite(fs)) return {text:'không hợp lệ',color:'var(--ink-faint)'};
-  if(fs<1.0) return {text:'không ổn định',color:'var(--danger)'};
-  if(fs<1.5) return {text:'cần kiểm tra thêm',color:'var(--warn)'};
-  return {text:'ổn định',color:'var(--safe)'};
+  if(fs===null || !isFinite(fs)) return {text:t('verdict_invalid'),color:'var(--ink-faint)'};
+  if(fs<1.0) return {text:t('verdict_unstable'),color:'var(--danger)'};
+  if(fs<1.5) return {text:t('verdict_marginal'),color:'var(--warn)'};
+  return {text:t('verdict_stable'),color:'var(--safe)'};
 }
 
 function updateReadouts(p){
@@ -565,7 +695,7 @@ function drawDiagram(p, run, result){
     if(hatchId) layerRects += `<rect x="${px(gxMin)}" y="${ry0}" width="${px(run*1.2)-px(gxMin)}" height="${ry1-ry0}" fill="url(#${hatchId})"/>`;
     if(topY>modelMinY && topY<modelMaxY){
       layerRects += `<line x1="${px(gxMin)}" y1="${ry0}" x2="${px(run*1.2)}" y2="${ry0}" stroke="var(--${colorVar}-b)" stroke-width="1" stroke-dasharray="5,3"/>`;
-      const labelText = Li===5 ? `nền cứng (lớp 5)` : `lớp ${Li}`;
+      const labelText = Li===5 ? t('diagram_rigid') : t('diagram_layer',Li);
       layerRects += `<text x="${px(gxMin)+6}" y="${ry0+12}" fill="var(--${colorVar}-b)" font-size="9.5" font-family="IBM Plex Mono, monospace">${labelText}</text>`;
     }
   }
@@ -638,8 +768,8 @@ function drawDiagram(p, run, result){
     <line x1="${crestX-18}" y1="${toeY}" x2="${crestX-10}" y2="${toeY}" stroke="var(--ink-faint)" stroke-width="0.7"/>
     <text x="${crestX-22}" y="${(crestY+toeY)/2}" fill="var(--ink-faint)" font-size="10" text-anchor="end" font-family="IBM Plex Mono, monospace" transform="rotate(-90 ${crestX-22} ${(crestY+toeY)/2})">H = ${p.H.toFixed(1)} m</text>
 
-    <text x="${crestX}" y="${crestY-8}" fill="var(--ink-dim)" font-size="10.5" text-anchor="middle" font-family="IBM Plex Sans, sans-serif">Đỉnh mái</text>
-    <text x="${toeX}" y="${toeY+16}" fill="var(--ink-dim)" font-size="10.5" text-anchor="middle" font-family="IBM Plex Sans, sans-serif">Chân mái</text>
+    <text x="${crestX}" y="${crestY-8}" fill="var(--ink-dim)" font-size="10.5" text-anchor="middle" font-family="IBM Plex Sans, sans-serif">${t('diagram_crest')}</text>
+    <text x="${toeX}" y="${toeY+16}" fill="var(--ink-dim)" font-size="10.5" text-anchor="middle" font-family="IBM Plex Sans, sans-serif">${t('diagram_toe')}</text>
   `;
 }
 
@@ -661,7 +791,7 @@ function recompute(triggerRedraw){
   if(!result || result.invalid || result.slices.length<3){
     fsFEl.textContent='—'; fsBEl.textContent='—';
     stampVal.textContent='—';
-    stampLabel.textContent = (result && result.invalid==='bedrock') ? 'mặt trượt chạm nền cứng' : 'mặt trượt không hợp lệ';
+    stampLabel.textContent = (result && result.invalid==='bedrock') ? t('msg_bedrock') : t('msg_invalid_surface');
     stamp.style.borderColor='var(--ink-faint)'; stampVal.style.color='var(--ink-faint)';
     document.getElementById('stat-width').textContent='—';
     document.getElementById('stat-depth').textContent='—';
@@ -711,7 +841,7 @@ function gridSearch(){
   const p=readInputs();
   const run=p.H*p.m;
   const status=document.getElementById('search-status');
-  status.textContent='Đang quét lưới tâm trượt...';
+  status.textContent=t('search_scanning');
   setTimeout(()=>{
     const centersX=9, centersY=9, radii=9;
     let best=null;
@@ -742,9 +872,9 @@ function gridSearch(){
       el.Yc.value=best.Yc.toFixed(1);
       el.R.value=best.R.toFixed(1);
       recompute();
-      status.textContent=`Đã tìm thấy cung nguy hiểm nhất: FS ≈ ${best.fsB.toFixed(3)}`;
+      status.textContent=t('search_found', best.fsB.toFixed(3));
     } else {
-      status.textContent='Không tìm được cung trượt hợp lệ trong phạm vi quét — thử điều chỉnh hình học.';
+      status.textContent=t('search_notfound');
     }
   }, 30);
 }
@@ -914,6 +1044,18 @@ function drawContourPlot(p,run,gd){
 }
 
 let lastMinCell=null;
+let lastContourResult=null;
+
+function renderContourStatus(){
+  const status=document.getElementById('contour-status');
+  if(!lastContourResult){ status.textContent=''; return; }
+  const {nx,ny,nR,minCell}=lastContourResult;
+  if(minCell){
+    status.textContent=t('contour_found', nx, ny, nR, minCell.Xc.toFixed(1), minCell.Yc.toFixed(1), minCell.R.toFixed(1), minCell.fs.toFixed(3));
+  } else {
+    status.textContent=t('contour_notfound');
+  }
+}
 
 function handleGeometryChange(){
   const H=parseFloat(el.H.value), m=parseFloat(el.m.value);
@@ -942,17 +1084,18 @@ document.getElementById('btn-contour').addEventListener('click', ()=>{
   const status=document.getElementById('contour-status');
   const section=document.getElementById('contour-section');
   section.style.display='block';
-  status.textContent='Đang quét lưới tâm trượt × bán kính — có thể mất vài giây...';
+  status.textContent=t('contour_scanning');
   document.getElementById('btn-use-min').style.display='none';
   setTimeout(()=>{
     const gd=computeFSGrid(p,run);
     const minCell=drawContourPlot(p,run,gd);
+    lastContourResult={nx:gd.nx, ny:gd.ny, nR:13, minCell};
     if(minCell){
       lastMinCell=minCell;
-      status.textContent=`Quét ${gd.nx}×${gd.ny} tâm × ${13} bán kính mỗi tâm. Tâm nguy hiểm nhất: Xc=${minCell.Xc.toFixed(1)}m, Yc=${minCell.Yc.toFixed(1)}m, R=${minCell.R.toFixed(1)}m — FS ≈ ${minCell.fs.toFixed(3)}.`;
+      renderContourStatus();
       document.getElementById('btn-use-min').style.display='';
     } else {
-      status.textContent='Không tìm được tâm trượt hợp lệ nào trong phạm vi quét — thử điều chỉnh hình học hoặc lớp đất.';
+      renderContourStatus();
     }
   }, 30);
 });
@@ -964,6 +1107,9 @@ document.getElementById('btn-use-min').addEventListener('click', ()=>{
   el.R.value=lastMinCell.R.toFixed(1);
   recompute();
 });
+
+document.getElementById('lang-vi').addEventListener('click', ()=>applyLanguage('vi'));
+document.getElementById('lang-en').addEventListener('click', ()=>applyLanguage('en'));
 
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
