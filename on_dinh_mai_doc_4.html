@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ổn định mái dốc — Fellenius &amp; Bishop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,500;0,600;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EBEFF3; --panel:#FFFFFF; --panel2:#F3F6F8; --field:#FFFFFF;
+    --ink:#1B2530; --ink-dim:#51606F; --ink-faint:#8695A6;
+    --accent:#1E6E8C; --accent-dim:#DCEEF4; --accent-strong:#154E63;
+    --earth:#A9793D; --earth-fill:#EADCC0; --earth-fill2:#DECDA3;
+    --rock:#8B93A0; --rock-fill:#D7DCE2;
+    --layer1:#F1E4C8; --layer1-b:#C7A465;
+    --layer2:#E4CC9F; --layer2-b:#B4884A;
+    --layer3:#CDA96F; --layer3-b:#966E38;
+    --layer4:#AC8F6C; --layer4-b:#785E39;
+    --layer5:#C6CBD2; --layer5-b:#68717E;
+    --safe:#1E8A57; --safe-dim:#DFF3E7;
+    --warn:#B07208; --warn-dim:#FBEDD1;
+    --danger:#C4392F; --danger-dim:#FBE1DD;
+    --line:#D8DFE6; --line-soft:#E7ECF1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{max-width:1180px; margin:0 auto; padding:28px 20px 60px;}
+  header{display:flex; align-items:baseline; justify-content:space-between; gap:16px; border-bottom:1px solid var(--line); padding-bottom:16px; margin-bottom:22px; flex-wrap:wrap;}
+  header h1{
+    font-family:'Newsreader', serif; font-weight:600; font-style:italic;
+    font-size:26px; margin:0; letter-spacing:0.2px; color:var(--ink);
+  }
+  header .sub{font-size:12.5px; color:var(--ink-dim); margin-top:4px; max-width:520px; line-height:1.5;}
+  header .credit{font-size:11px; color:var(--ink-faint); margin-top:6px; font-style:italic;}
+  header .badge-row{display:flex; gap:8px; font-size:11px; color:var(--ink-faint); font-family:'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:0.06em;}
+  header .badge-row span{border:1px solid var(--line); border-radius:3px; padding:3px 7px;}
+
+  .layout{display:grid; grid-template-columns:300px 1fr; gap:20px;}
+  @media (max-width:860px){ .layout{grid-template-columns:1fr;} }
+
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px 16px 18px;}
+  .panel + .panel{margin-top:16px;}
+  .panel h2{
+    font-size:11px; text-transform:uppercase; letter-spacing:0.09em; color:var(--accent);
+    margin:0 0 12px; font-weight:600; display:flex; align-items:center; gap:8px;
+  }
+  .panel h2::after{content:''; flex:1; height:1px; background:var(--line);}
+
+  .field{margin-bottom:12px;}
+  .field:last-child{margin-bottom:0;}
+  .field label{display:flex; justify-content:space-between; font-size:12.5px; color:var(--ink-dim); margin-bottom:5px;}
+  .field label b{color:var(--ink); font-weight:500; font-family:'IBM Plex Mono',monospace; font-size:12.5px;}
+  .field input[type=range]{
+    width:100%; height:3px; -webkit-appearance:none; appearance:none; background:var(--line); border-radius:2px; outline:none;
+  }
+  .field input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:14px; height:14px; border-radius:50%; background:var(--accent); cursor:pointer; border:2px solid var(--bg);
+  }
+  .field input[type=range]::-moz-range-thumb{
+    width:14px; height:14px; border-radius:50%; background:var(--accent); cursor:pointer; border:2px solid var(--bg);
+  }
+  .field-note{font-size:11px; color:var(--ink-faint); margin-top:4px; line-height:1.4;}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+
+  .strat-row{display:flex; gap:12px; margin-bottom:14px;}
+  .strat-svg{width:36px; height:160px; flex-shrink:0; border-radius:4px; overflow:hidden; border:1px solid var(--line);}
+  .strat-tabs{display:flex; flex-direction:column; gap:4px; flex:1;}
+  .tab-btn{
+    text-align:left; background:var(--panel2); border:1px solid var(--line); color:var(--ink-dim);
+    font-family:'IBM Plex Sans',sans-serif; font-size:11.5px; font-weight:500; padding:6px 9px;
+    border-radius:5px; cursor:pointer; transition:background .12s, border-color .12s, color .12s;
+    display:flex; align-items:center; gap:7px;
+  }
+  .tab-btn::before{content:''; width:8px; height:8px; border-radius:2px; background:var(--dot,var(--ink-faint)); flex-shrink:0;}
+  .tab-btn:nth-child(1){ --dot:var(--layer1-b); }
+  .tab-btn:nth-child(2){ --dot:var(--layer2-b); }
+  .tab-btn:nth-child(3){ --dot:var(--layer3-b); }
+  .tab-btn:nth-child(4){ --dot:var(--layer4-b); }
+  .tab-btn:nth-child(5){ --dot:var(--layer5-b); }
+  .tab-btn:hover{background:var(--accent-dim);}
+  .tab-btn.active{background:var(--accent-dim); border-color:var(--accent); color:var(--ink);}
+
+  button{
+    width:100%; background:var(--field); border:1px solid var(--line); color:var(--ink);
+    font-family:'IBM Plex Sans',sans-serif; font-size:12.5px; font-weight:500; padding:9px 10px;
+    border-radius:6px; cursor:pointer; transition:background .15s, border-color .15s;
+  }
+  button:hover{background:var(--panel2); border-color:var(--accent-dim);}
+  button.primary{background:var(--accent); border-color:var(--accent-strong); color:#FFFFFF;}
+  button.primary:hover{background:var(--accent-strong);}
+  button:disabled{opacity:.5; cursor:default;}
+
+  .canvas-wrap{position:relative; background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:8px; overflow:hidden;}
+  svg{width:100%; height:auto; display:block;}
+
+  .stamp{
+    position:absolute; top:18px; right:18px; width:118px; height:118px; border-radius:50%;
+    border:2.5px solid; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    transform:rotate(-8deg); font-family:'IBM Plex Mono',monospace; text-align:center; pointer-events:none;
+  }
+  .stamp .fs-val{font-size:26px; font-weight:600; line-height:1;}
+  .stamp .fs-label{font-size:9px; letter-spacing:0.08em; margin-top:4px; text-transform:uppercase;}
+  .stamp .fs-method{font-size:8px; letter-spacing:0.06em; margin-top:2px; opacity:.8;}
+
+  .results-bar{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:14px;}
+  .stat{background:var(--panel2); border:1px solid var(--line); border-radius:7px; padding:10px 12px;}
+  .stat .lbl{font-size:10.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-faint);}
+  .stat .val{font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:500; margin-top:3px;}
+  @media (max-width:640px){ .results-bar{grid-template-columns:repeat(2,1fr);} }
+
+  details.slice-table{margin-top:16px; background:var(--panel); border:1px solid var(--line); border-radius:8px;}
+  details.slice-table summary{
+    padding:11px 16px; cursor:pointer; font-size:12.5px; color:var(--accent); list-style:none; user-select:none;
+    display:flex; align-items:center; gap:6px;
+  }
+  details.slice-table summary::-webkit-details-marker{display:none;}
+  details.slice-table summary::before{content:'▸'; font-size:10px; transition:transform .15s;}
+  details.slice-table[open] summary::before{transform:rotate(90deg);}
+  .table-wrap{padding:0 16px 16px; overflow-x:auto;}
+  table{width:100%; border-collapse:collapse; font-family:'IBM Plex Mono',monospace; font-size:11.5px;}
+  th,td{padding:6px 8px; text-align:right; border-bottom:1px solid var(--line-soft); white-space:nowrap;}
+  th{color:var(--ink-faint); font-weight:500; text-transform:uppercase; font-size:10px; letter-spacing:0.04em;}
+  td:first-child, th:first-child{text-align:left; color:var(--ink-dim);}
+  tfoot td{border-top:1px solid var(--line); border-bottom:none; font-weight:600; color:var(--accent); padding-top:8px;}
+
+  .limits{margin-top:16px; font-size:11.5px; color:var(--ink-faint); line-height:1.6; border-top:1px solid var(--line); padding-top:12px;}
+  .limits b{color:var(--ink-dim); font-weight:500;}
+
+  .legend{display:flex; gap:14px; flex-wrap:wrap; margin-top:10px; font-size:11px; color:var(--ink-faint);}
+  .legend span{display:inline-flex; align-items:center; gap:5px;}
+  .legend i{width:9px; height:9px; border-radius:2px; display:inline-block;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div>
+      <h1>Ổn định mái dốc — mặt trượt tròn</h1>
+      <div class="sub">Tính hệ số an toàn theo phương pháp Fellenius (Ordinary Method of Slices) và Bishop đơn giản hóa, phân tích mặt cắt 2D bằng phương pháp chia dải, nền đất tối đa 5 lớp.</div>
+      <div class="credit">Phát triển: TS. Đặng Minh Tân — Trường Đại học Giao thông vận tải</div>
+    </div>
+    <div class="badge-row"><span>Fellenius</span><span>Bishop simplified</span><span>5 lớp đất</span></div>
+  </header>
+
+  <div class="layout">
+    <aside>
+      <div class="panel">
+        <h2>Hình học mái dốc</h2>
+        <div class="field">
+          <label>Chiều cao mái dốc H <b id="v-H">8.0 m</b></label>
+          <input type="range" id="H" min="2" max="30" step="0.5" value="8">
+        </div>
+        <div class="field">
+          <label>Hệ số mái dốc m (ngang : đứng = m : 1) <b id="v-m">1.50</b></label>
+          <input type="range" id="m" min="0.5" max="3" step="0.05" value="1.5">
+          <div class="field-note">m = 1.5 nghĩa là mái dốc 1:1.5 (đứng 1, ngang 1.5)</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Địa tầng — 5 lớp đất</h2>
+        <div class="strat-row">
+          <svg id="strat-mini" viewBox="0 0 40 160" class="strat-svg"></svg>
+          <div class="strat-tabs" id="layer-tabs">
+            <button type="button" class="tab-btn active" data-layer="1">Lớp 1</button>
+            <button type="button" class="tab-btn" data-layer="2">Lớp 2</button>
+            <button type="button" class="tab-btn" data-layer="3">Lớp 3</button>
+            <button type="button" class="tab-btn" data-layer="4">Lớp 4</button>
+            <button type="button" class="tab-btn" data-layer="5">Lớp 5 · nền cứng</button>
+          </div>
+        </div>
+
+        <div id="layer-fields">
+          <div class="row2">
+            <div class="field">
+              <label>γ <b id="v-Lgamma">—</b></label>
+              <input type="range" id="Lgamma" min="14" max="24" step="0.5" value="16.5">
+              <div class="field-note">kN/m³</div>
+            </div>
+            <div class="field">
+              <label>c <b id="v-Lc">—</b></label>
+              <input type="range" id="Lc" min="0" max="100" step="1" value="6">
+              <div class="field-note">kPa</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>φ (góc ma sát trong) <b id="v-Lphi">—</b></label>
+            <input type="range" id="Lphi" min="0" max="45" step="0.5" value="8">
+          </div>
+          <div class="field" id="field-Lt">
+            <label>Chiều dày lớp <b id="v-Lt">—</b></label>
+            <input type="range" id="Lt" min="0.5" max="20" step="0.5" value="1.5">
+          </div>
+          <div class="field-note" id="rigid-note" style="display:none;">Lớp cuối cùng — nền cứng/đá gốc, coi là ranh giới không cho mặt trượt xuyên qua.</div>
+        </div>
+
+        <div class="field" style="margin-top:12px;">
+          <label>ru (hệ số áp lực nước lỗ rỗng, áp dụng chung) <b id="v-ru">0.00</b></label>
+          <input type="range" id="ru" min="0" max="0.5" step="0.05" value="0">
+        </div>
+        <div class="field-note" style="margin-top:8px;">Tổng chiều dày 4 lớp trên tới nền cứng: <b id="total-depth" style="font-family:'IBM Plex Mono',monospace; color:var(--ink);">—</b></div>
+      </div>
+
+      <div class="panel">
+        <h2>Mặt trượt tròn (thử dần)</h2>
+        <div class="field">
+          <label>Tâm trượt Xc <b id="v-Xc">-3.0 m</b></label>
+          <input type="range" id="Xc" min="-30" max="30" step="0.2" value="-3">
+        </div>
+        <div class="field">
+          <label>Tâm trượt Yc <b id="v-Yc">12.0 m</b></label>
+          <input type="range" id="Yc" min="0" max="60" step="0.2" value="12">
+        </div>
+        <div class="field">
+          <label>Bán kính R <b id="v-R">13.0 m</b></label>
+          <input type="range" id="R" min="1" max="80" step="0.2" value="13">
+        </div>
+        <div class="field">
+          <label>Số dải tính toán <b id="v-n">16</b></label>
+          <input type="range" id="n" min="6" max="40" step="1" value="16">
+        </div>
+        <div class="field" style="margin-top:14px;">
+          <button class="primary" id="btn-search">Tìm cung trượt nguy hiểm nhất</button>
+          <div class="field-note" id="search-status" style="margin-top:8px;"></div>
+        </div>
+        <div class="field" style="margin-top:10px;">
+          <button id="btn-contour">Vẽ lưới tâm trượt &amp; đường đồng mức FS</button>
+          <div class="field-note" id="contour-status" style="margin-top:8px;"></div>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <div class="canvas-wrap">
+        <svg id="diagram" viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="stamp" id="stamp">
+          <div class="fs-val" id="stamp-val">—</div>
+          <div class="fs-label" id="stamp-label">—</div>
+          <div class="fs-method">Bishop simplified</div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <span><i style="background:var(--layer1);border:1px solid var(--layer1-b);"></i>Màu lớp đất — xem cột địa tầng bên trái</span>
+        <span><i style="background:var(--accent);"></i>Cung trượt tròn</span>
+        <span><i style="background:var(--safe);"></i>FS ≥ 1.50 ổn định</span>
+        <span><i style="background:var(--warn);"></i>1.00 ≤ FS &lt; 1.50 cần kiểm tra</span>
+        <span><i style="background:var(--danger);"></i>FS &lt; 1.00 không ổn định</span>
+      </div>
+
+      <div class="results-bar">
+        <div class="stat"><div class="lbl">FS — Fellenius</div><div class="val" id="fs-fellenius">—</div></div>
+        <div class="stat"><div class="lbl">FS — Bishop</div><div class="val" id="fs-bishop">—</div></div>
+        <div class="stat"><div class="lbl">Chiều rộng khối trượt</div><div class="val" id="stat-width">—</div></div>
+        <div class="stat"><div class="lbl">Độ sâu mặt trượt lớn nhất</div><div class="val" id="stat-depth">—</div></div>
+      </div>
+
+      <div class="panel" id="contour-section" style="margin-top:16px; display:none;">
+        <h2>Lưới tâm trượt &amp; đường đồng mức FS</h2>
+        <div class="canvas-wrap">
+          <svg id="contour-diagram" viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+        <div class="legend" style="margin-top:10px;">
+          <span><i style="background:rgb(196,57,47);"></i>FS ≤ 1,0</span>
+          <span><i style="background:rgb(176,114,8);"></i>FS ≈ 1,5</span>
+          <span><i style="background:rgb(30,138,87);"></i>FS ≥ 2,5</span>
+          <span>Mỗi chấm = FS nhỏ nhất tìm được tại tâm đó (đã dò qua nhiều bán kính)</span>
+        </div>
+        <div class="field" style="margin-top:10px;">
+          <button class="primary" id="btn-use-min" style="display:none;">Dùng tâm nguy hiểm nhất từ lưới</button>
+        </div>
+      </div>
+
+      <details class="slice-table">
+        <summary>Bảng tính chi tiết theo từng dải (phương pháp Bishop đơn giản hóa)</summary>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Dải</th><th>Lớp</th><th>b (m)</th><th>h (m)</th><th>α (°)</th><th>W (kN/m)</th><th>c·b+(W−u·b)tanφ</th><th>mα</th><th>W·sinα</th></tr>
+            </thead>
+            <tbody id="slice-tbody"></tbody>
+            <tfoot>
+              <tr><td colspan="6"></td><td id="foot-num">—</td><td></td><td id="foot-den">—</td></tr>
+            </tfoot>
+          </table>
+        </div>
+      </details>
+
+      <div class="limits">
+        <b>Giới hạn của công cụ:</b> áp dụng cho mặt trượt tròn (circular slip surface), phương pháp Fellenius (OMS) và Bishop đơn giản hóa (cân bằng mô men, bỏ qua lực giữa các dải). Nền đất tối đa 5 lớp với ranh giới nằm ngang (không nghiêng theo địa tầng thực); chỉ tiêu c, φ dùng để tính sức chống cắt tại đáy mỗi dải lấy theo lớp chứa điểm đáy đó, còn trọng lượng dải cộng dồn theo từng lớp mà dải đi qua. Lớp 5 coi là nền cứng/đá gốc — mặt trượt chạm tới ranh giới này sẽ bị coi là không hợp lệ. Áp lực nước lỗ rỗng xấp xỉ theo hệ số ru dùng chung cho mọi lớp, không mô phỏng lưới thấm hay mực nước ngầm thực tế. Không xét tải trọng động đất, mặt trượt phi tròn, địa tầng nghiêng/phức tạp, cốt gia cường (neo, cọc, vải địa kỹ thuật) hay hiệu ứng 3D. Dùng cho mục đích học tập/sơ bộ — với công trình thực tế cần kiểm tra bằng phần mềm chuyên dụng (SLOPE/W, GeoStudio, Plaxis…) và tiêu chuẩn hiện hành (TCVN 4253, 22TCN…).
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+const ids=['H','m','ru','Xc','Yc','R','n'];
+const geomIds=['H','m'];
+let lastL=null;
+const el={}; ids.forEach(id=>el[id]=document.getElementById(id));
+const out={}; ids.forEach(id=>out[id]=document.getElementById('v-'+id));
+
+const layerDefaults=[
+  {gamma:16.5, c:6,  phi:8,  t:1.5},
+  {gamma:17.5, c:12, phi:14, t:2},
+  {gamma:18.5, c:20, phi:20, t:2.5},
+  {gamma:19.5, c:30, phi:26, t:3},
+  {gamma:21,   c:80, phi:35, t:null}
+];
+let layers=layerDefaults.map(l=>({...l}));
+let activeLayer=1;
+
+function layerBoundaries(ls){
+  const b=[Infinity]; let cum=0;
+  for(let i=0;i<4;i++){ cum+=ls[i].t; b.push(-cum); }
+  return b;
+}
+
+function groundY(x, run, H){
+  if(x<=-run) return H;
+  if(x>=0) return 0;
+  return H*(-x)/run;
+}
+function baseY(x,Xc,Yc,R){
+  const dx=x-Xc, disc=R*R-dx*dx;
+  if(disc<0) return null;
+  return Yc-Math.sqrt(disc);
+}
+
+function findEntryExit(run,H,Xc,Yc,R,sampleN){
+  const N=sampleN||700;
+  const xMin=Math.min(-run-2*run,Xc-R), xMax=Math.max(run*1.5,Xc+R);
+  const xs=[], fs=[];
+  for(let i=0;i<=N;i++){
+    const x=xMin+(xMax-xMin)*i/N;
+    const by=baseY(x,Xc,Yc,R);
+    const f = (by===null) ? -1 : groundY(x,run,H)-by;
+    xs.push(x); fs.push(f);
+  }
+  const regions=[];
+  let curStart=-1;
+  for(let i=0;i<=N;i++){
+    if(fs[i]>1e-6){ if(curStart<0) curStart=i; }
+    else { if(curStart>=0){ regions.push([curStart,i-1]); curStart=-1; } }
+  }
+  if(curStart>=0) regions.push([curStart,N]);
+  if(regions.length===0) return null;
+  function overlapWithSlope(l,r){ return Math.max(0, Math.min(r,0)-Math.max(l,-run)); }
+  let best=null,bestScore=-1;
+  for(const [a,b] of regions){
+    let xL=xs[a], xR=xs[b];
+    if(a>0){ const x0=xs[a-1],x1=xs[a],f0=fs[a-1],f1=fs[a]; if(f1-f0!==0) xL=x0+(0-f0)*(x1-x0)/(f1-f0); }
+    if(b<N){ const x0=xs[b],x1=xs[b+1],f0=fs[b],f1=fs[b+1]; if(f1-f0!==0) xR=x0+(0-f0)*(x1-x0)/(f1-f0); }
+    if(xR-xL<0.4) continue;
+    const score=overlapWithSlope(xL,xR);
+    if(score>bestScore){ bestScore=score; best={xL,xR}; }
+  }
+  if(!best || bestScore < 0.35*run) return null;
+  return best;
+}
+
+function computeSlices(run,H,Xc,Yc,R,n,soil,sampleN){
+  const {layers,ru}=soil;
+  const bnd=layerBoundaries(layers);
+  const rigidTop=bnd[4];
+  const ee=findEntryExit(run,H,Xc,Yc,R,sampleN);
+  if(!ee) return null;
+  const {xL,xR}=ee;
+  const b=(xR-xL)/n;
+  const slices=[];
+  for(let i=0;i<n;i++){
+    const xMid=xL+(i+0.5)*b;
+    const yTop=groundY(xMid,run,H);
+    const byRaw=baseY(xMid,Xc,Yc,R);
+    if(byRaw===null) continue;
+    if(byRaw < rigidTop - 1e-9) return {invalid:'bedrock'};
+    const h=Math.max(0,yTop-byRaw);
+    let W=0;
+    for(let L=0; L<4; L++){
+      const top=Math.min(yTop,bnd[L]);
+      const bot=Math.max(byRaw,bnd[L+1]);
+      const thick=Math.max(0, top-bot);
+      W += layers[L].gamma*thick*b;
+    }
+    const sinA=Math.max(-1,Math.min(1,(Xc-xMid)/R));
+    const alpha=Math.asin(sinA);
+    const u = b>0 ? ru*(W/b) : 0;
+    const l=b/Math.cos(alpha);
+    let layerIdx=4;
+    for(let L=0;L<4;L++){ if(byRaw>=bnd[L+1]-1e-9){ layerIdx=L; break; } }
+    const lyr=layers[layerIdx];
+    slices.push({xMid,b,h,alpha,W,u,l,c:lyr.c,phi:lyr.phi,layer:layerIdx+1});
+  }
+  return {slices,xL,xR};
+}
+
+function fsFellenius(slices){
+  let num=0,den=0;
+  for(const s of slices){
+    const phiRad=s.phi*Math.PI/180;
+    num += s.c*s.l + (s.W*Math.cos(s.alpha)-s.u*s.l)*Math.tan(phiRad);
+    den += s.W*Math.sin(s.alpha);
+  }
+  if(den<=1e-9) return null;
+  return {fs:num/den, den};
+}
+
+function fsBishop(slices,fsInit,den){
+  let fs=fsInit && fsInit>0 ? fsInit : 1.5;
+  for(let iter=0;iter<60;iter++){
+    let num=0;
+    for(const s of slices){
+      const phiRad=s.phi*Math.PI/180;
+      let mAlpha=Math.cos(s.alpha)*(1+Math.tan(s.alpha)*Math.tan(phiRad)/fs);
+      if(Math.abs(mAlpha)<0.05) mAlpha = mAlpha<0 ? -0.05 : 0.05;
+      num += (s.c*s.b + (s.W - s.u*s.b)*Math.tan(phiRad))/mAlpha;
+    }
+    const newFs=num/den;
+    if(!isFinite(newFs) || newFs<=0) break;
+    if(Math.abs(newFs-fs)<1e-5){ fs=newFs; break; }
+    fs=newFs;
+  }
+  return fs;
+}
+
+function readInputs(){
+  return {
+    H:parseFloat(el.H.value), m:parseFloat(el.m.value),
+    ru:parseFloat(el.ru.value),
+    Xc:parseFloat(el.Xc.value), Yc:parseFloat(el.Yc.value),
+    R:parseFloat(el.R.value), n:parseInt(el.n.value),
+    layers:layers
+  };
+}
+
+function fmt(v,d){ return isFinite(v) ? v.toFixed(d) : '—'; }
+
+function verdict(fs){
+  if(fs===null || !isFinite(fs)) return {text:'không hợp lệ',color:'var(--ink-faint)'};
+  if(fs<1.0) return {text:'không ổn định',color:'var(--danger)'};
+  if(fs<1.5) return {text:'cần kiểm tra thêm',color:'var(--warn)'};
+  return {text:'ổn định',color:'var(--safe)'};
+}
+
+function updateReadouts(p){
+  out.H.textContent=p.H.toFixed(1)+' m';
+  out.m.textContent=p.m.toFixed(2);
+  out.ru.textContent=p.ru.toFixed(2);
+  out.Xc.textContent=p.Xc.toFixed(1)+' m';
+  out.Yc.textContent=p.Yc.toFixed(1)+' m';
+  out.R.textContent=p.R.toFixed(1)+' m';
+  out.n.textContent=p.n;
+}
+
+function updateTotalDepth(){
+  const total=layers.slice(0,4).reduce((s,l)=>s+l.t,0);
+  document.getElementById('total-depth').textContent=total.toFixed(1)+' m';
+}
+
+function loadLayerIntoFields(idx){
+  const L=layers[idx-1];
+  const Lgamma=document.getElementById('Lgamma'), Lc=document.getElementById('Lc'),
+        Lphi=document.getElementById('Lphi'), Lt=document.getElementById('Lt');
+  Lgamma.value=L.gamma; Lc.value=L.c; Lphi.value=L.phi;
+  document.getElementById('v-Lgamma').textContent=L.gamma.toFixed(1);
+  document.getElementById('v-Lc').textContent=L.c.toFixed(0);
+  document.getElementById('v-Lphi').textContent=L.phi.toFixed(1)+'°';
+  const fieldLt=document.getElementById('field-Lt'), rigidNote=document.getElementById('rigid-note');
+  if(idx===5){
+    fieldLt.style.display='none';
+    rigidNote.style.display='block';
+  } else {
+    fieldLt.style.display='';
+    rigidNote.style.display='none';
+    Lt.value=L.t;
+    document.getElementById('v-Lt').textContent=L.t.toFixed(1)+' m';
+  }
+}
+
+function onLayerFieldChange(){
+  const L=layers[activeLayer-1];
+  const Lgamma=document.getElementById('Lgamma'), Lc=document.getElementById('Lc'),
+        Lphi=document.getElementById('Lphi'), Lt=document.getElementById('Lt');
+  L.gamma=parseFloat(Lgamma.value); L.c=parseFloat(Lc.value); L.phi=parseFloat(Lphi.value);
+  document.getElementById('v-Lgamma').textContent=L.gamma.toFixed(1);
+  document.getElementById('v-Lc').textContent=L.c.toFixed(0);
+  document.getElementById('v-Lphi').textContent=L.phi.toFixed(1)+'°';
+  if(activeLayer!==5){
+    L.t=parseFloat(Lt.value);
+    document.getElementById('v-Lt').textContent=L.t.toFixed(1)+' m';
+  }
+  updateTotalDepth();
+  drawStratMini();
+  recompute();
+}
+
+function drawStratMini(){
+  const svg=document.getElementById('strat-mini');
+  const total=layers.slice(0,4).reduce((s,l)=>s+l.t,0);
+  const rigidH=30, totalH=160, usableH=totalH-rigidH;
+  const colors=['layer1','layer2','layer3','layer4'];
+  let y=0, rects='';
+  for(let i=0;i<4;i++){
+    const hFrac = total>0 ? layers[i].t/total : 0.25;
+    const bandH = usableH*hFrac;
+    const isActive = activeLayer===(i+1);
+    rects += `<rect x="0" y="${y.toFixed(1)}" width="40" height="${bandH.toFixed(1)}" fill="var(--${colors[i]})" stroke="${isActive?'var(--accent)':'var(--'+colors[i]+'-b)'}" stroke-width="${isActive?2:0.6}"/>`;
+    y+=bandH;
+  }
+  const isActive5 = activeLayer===5;
+  rects += `<rect x="0" y="${y.toFixed(1)}" width="40" height="${rigidH}" fill="var(--layer5)" stroke="${isActive5?'var(--accent)':'var(--layer5-b)'}" stroke-width="${isActive5?2:0.6}"/>`;
+  svg.innerHTML = `<defs><pattern id="rockhatch-mini" width="6" height="6" patternTransform="rotate(-45)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="6" stroke="var(--layer5-b)" stroke-opacity="0.5" stroke-width="1"/></pattern></defs>${rects}<rect x="0" y="${y.toFixed(1)}" width="40" height="${rigidH}" fill="url(#rockhatch-mini)"/>`;
+}
+
+function drawDiagram(p, run, result){
+  const svg=document.getElementById('diagram');
+  const W=900,H=480;
+  let ns=[];
+  if(result){
+    ns.push(...result.slices.map(s=>s.xMid));
+  }
+  const modelMinX=Math.min(-run-run*0.6, p.Xc-p.R);
+  const modelMaxX=Math.max(run*1.2, p.Xc+p.R);
+  const bnd=layerBoundaries(p.layers);
+  const totalDepth=-bnd[4];
+  const modelMinY=Math.min(-p.H*0.15, p.Yc-p.R, bnd[4]-p.H*0.3);
+  const modelMaxY=Math.max(p.H, p.Yc+p.R*0.15);
+  const padPx=50;
+  const spanX=modelMaxX-modelMinX, spanY=modelMaxY-modelMinY;
+  const scale=Math.min((W-2*padPx)/spanX,(H-2*padPx-70)/spanY);
+  const offX = padPx - modelMinX*scale;
+  const offY = H-padPx - (-modelMinY)*scale;
+  function px(x){ return offX + x*scale; }
+  function py(y){ return offY - y*scale; }
+
+  const groundPts=[];
+  const gxMin=Math.max(modelMinX,-run-run*0.6);
+  const steps=60;
+  for(let i=0;i<=steps;i++){
+    const x=gxMin+((run*1.2)-gxMin)*i/steps;
+    groundPts.push([px(x),py(groundY(x,run,p.H))]);
+  }
+  const groundPath='M'+groundPts.map(pt=>pt.join(',')).join(' L');
+  const layer1Bot=Math.max(bnd[1],modelMinY);
+  const fillPath=groundPath+` L${px(run*1.2)},${py(layer1Bot)} L${px(gxMin)},${py(layer1Bot)} Z`;
+
+  const layerColors=['layer1','layer2','layer3','layer4','layer5'];
+  let layerRects='';
+  for(let Li=2; Li<=5; Li++){
+    const topY = bnd[Li-1];
+    const botY = Li<5 ? bnd[Li] : modelMinY;
+    const clippedTop=Math.min(topY,modelMaxY);
+    const clippedBot=Math.max(botY,modelMinY);
+    if(clippedTop<=clippedBot) continue;
+    const ry0=py(clippedTop), ry1=py(clippedBot);
+    const colorVar=layerColors[Li-1];
+    const hatchId = Li===5 ? 'rockhatch' : '';
+    layerRects += `<rect x="${px(gxMin)}" y="${ry0}" width="${px(run*1.2)-px(gxMin)}" height="${ry1-ry0}" fill="var(--${colorVar})"/>`;
+    if(hatchId) layerRects += `<rect x="${px(gxMin)}" y="${ry0}" width="${px(run*1.2)-px(gxMin)}" height="${ry1-ry0}" fill="url(#${hatchId})"/>`;
+    if(topY>modelMinY && topY<modelMaxY){
+      layerRects += `<line x1="${px(gxMin)}" y1="${ry0}" x2="${px(run*1.2)}" y2="${ry0}" stroke="var(--${colorVar}-b)" stroke-width="1" stroke-dasharray="5,3"/>`;
+      const labelText = Li===5 ? `nền cứng (lớp 5)` : `lớp ${Li}`;
+      layerRects += `<text x="${px(gxMin)+6}" y="${ry0+12}" fill="var(--${colorVar}-b)" font-size="9.5" font-family="IBM Plex Mono, monospace">${labelText}</text>`;
+    }
+  }
+
+  let sliceEls='';
+  let arcPath='';
+  if(result){
+    const {xL,xR}=result;
+    const arcSteps=40;
+    let pts=[];
+    for(let i=0;i<=arcSteps;i++){
+      const x=xL+(xR-xL)*i/arcSteps;
+      const y=baseY(x,p.Xc,p.Yc,p.R);
+      if(y!==null) pts.push([px(x),py(y)]);
+    }
+    arcPath='M'+pts.map(pt=>pt.join(',')).join(' L');
+
+    sliceEls = result.slices.map((s,i)=>{
+      const x0=s.xMid-s.b/2, x1=s.xMid+s.b/2;
+      const yTop0=groundY(x0,run,p.H), yTop1=groundY(x1,run,p.H);
+      const yB0=baseY(x0,p.Xc,p.Yc,p.R), yB1=baseY(x1,p.Xc,p.Yc,p.R);
+      if(yB0===null||yB1===null) return '';
+      const pts=[[px(x0),py(yTop0)],[px(x1),py(yTop1)],[px(x1),py(yB1)],[px(x0),py(yB0)]];
+      const opacity = i%2===0 ? 0.16 : 0.28;
+      return `<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="var(--accent)" fill-opacity="${opacity}" stroke="var(--accent-dim)" stroke-width="0.6"/>`;
+    }).join('');
+  }
+
+  const crestX=px(-run), crestY=py(p.H), toeX=px(0), toeY=py(0);
+  const baseLineY=py(modelMinY);
+
+  const dimY = py(p.H)-16;
+  const centerPx=px(p.Xc), centerPy=py(p.Yc);
+
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML = `
+    <rect x="0" y="0" width="${W}" height="${H}" fill="none"/>
+    <defs>
+      <pattern id="hatch" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+        <line x1="0" y1="0" x2="0" y2="7" stroke="var(--layer1-b)" stroke-opacity="0.35" stroke-width="1"/>
+      </pattern>
+      <pattern id="rockhatch" width="8" height="8" patternTransform="rotate(-45)" patternUnits="userSpaceOnUse">
+        <line x1="0" y1="0" x2="0" y2="8" stroke="var(--layer5-b)" stroke-opacity="0.4" stroke-width="1.3"/>
+      </pattern>
+    </defs>
+    <path d="${fillPath}" fill="var(--layer1)"/>
+    <path d="${fillPath}" fill="url(#hatch)"/>
+    ${layerRects}
+    ${sliceEls}
+    <path d="${groundPath}" fill="none" stroke="var(--layer1-b)" stroke-width="2"/>
+    ${arcPath ? `<path d="${arcPath}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="0"/>` : ''}
+    ${result ? `
+      <line x1="${centerPx}" y1="${centerPy}" x2="${px(result.xL)}" y2="${py(baseY(result.xL,p.Xc,p.Yc,p.R))}" stroke="var(--ink-faint)" stroke-width="0.7" stroke-dasharray="3,3"/>
+      <line x1="${centerPx}" y1="${centerPy}" x2="${px(result.xR)}" y2="${py(baseY(result.xR,p.Xc,p.Yc,p.R))}" stroke="var(--ink-faint)" stroke-width="0.7" stroke-dasharray="3,3"/>
+    ` : ''}
+    <g stroke="var(--ink-faint)" stroke-width="1">
+      <line x1="${centerPx-6}" y1="${centerPy}" x2="${centerPx+6}" y2="${centerPy}"/>
+      <line x1="${centerPx}" y1="${centerPy-6}" x2="${centerPx}" y2="${centerPy+6}"/>
+    </g>
+    <circle cx="${centerPx}" cy="${centerPy}" r="2.5" fill="var(--accent)"/>
+    <text x="${centerPx+9}" y="${centerPy-6}" fill="var(--ink-faint)" font-size="10" font-family="IBM Plex Mono, monospace">O</text>
+
+    <line x1="${crestX}" y1="${dimY}" x2="${toeX}" y2="${dimY}" stroke="var(--ink-faint)" stroke-width="0.7"/>
+    <line x1="${crestX}" y1="${dimY-4}" x2="${crestX}" y2="${dimY+4}" stroke="var(--ink-faint)" stroke-width="0.7"/>
+    <line x1="${toeX}" y1="${dimY-4}" x2="${toeX}" y2="${dimY+4}" stroke="var(--ink-faint)" stroke-width="0.7"/>
+    <text x="${(crestX+toeX)/2}" y="${dimY-6}" fill="var(--ink-faint)" font-size="10" text-anchor="middle" font-family="IBM Plex Mono, monospace">1 : ${p.m.toFixed(2)}</text>
+
+    <line x1="${crestX-14}" y1="${crestY}" x2="${crestX-14}" y2="${toeY}" stroke="var(--ink-faint)" stroke-width="0.7"/>
+    <line x1="${crestX-18}" y1="${crestY}" x2="${crestX-10}" y2="${crestY}" stroke="var(--ink-faint)" stroke-width="0.7"/>
+    <line x1="${crestX-18}" y1="${toeY}" x2="${crestX-10}" y2="${toeY}" stroke="var(--ink-faint)" stroke-width="0.7"/>
+    <text x="${crestX-22}" y="${(crestY+toeY)/2}" fill="var(--ink-faint)" font-size="10" text-anchor="end" font-family="IBM Plex Mono, monospace" transform="rotate(-90 ${crestX-22} ${(crestY+toeY)/2})">H = ${p.H.toFixed(1)} m</text>
+
+    <text x="${crestX}" y="${crestY-8}" fill="var(--ink-dim)" font-size="10.5" text-anchor="middle" font-family="IBM Plex Sans, sans-serif">Đỉnh mái</text>
+    <text x="${toeX}" y="${toeY+16}" fill="var(--ink-dim)" font-size="10.5" text-anchor="middle" font-family="IBM Plex Sans, sans-serif">Chân mái</text>
+  `;
+}
+
+function recompute(triggerRedraw){
+  const p=readInputs();
+  updateReadouts(p);
+  const run = p.H*p.m;
+  const result = computeSlices(run,p.H,p.Xc,p.Yc,p.R,p.n,p);
+
+  const stampVal=document.getElementById('stamp-val');
+  const stampLabel=document.getElementById('stamp-label');
+  const stamp=document.getElementById('stamp');
+  const fsFEl=document.getElementById('fs-fellenius');
+  const fsBEl=document.getElementById('fs-bishop');
+  const tbody=document.getElementById('slice-tbody');
+  const footNum=document.getElementById('foot-num');
+  const footDen=document.getElementById('foot-den');
+
+  if(!result || result.invalid || result.slices.length<3){
+    fsFEl.textContent='—'; fsBEl.textContent='—';
+    stampVal.textContent='—';
+    stampLabel.textContent = (result && result.invalid==='bedrock') ? 'mặt trượt chạm nền cứng' : 'mặt trượt không hợp lệ';
+    stamp.style.borderColor='var(--ink-faint)'; stampVal.style.color='var(--ink-faint)';
+    document.getElementById('stat-width').textContent='—';
+    document.getElementById('stat-depth').textContent='—';
+    tbody.innerHTML='';
+    footNum.textContent='—'; footDen.textContent='—';
+    drawDiagram(p,run,null);
+    return null;
+  }
+
+  const fel=fsFellenius(result.slices);
+  const fsF = fel ? fel.fs : null;
+  const fsB = fel ? fsBishop(result.slices,fsF,fel.den) : null;
+
+  fsFEl.textContent = fsF!==null ? fmt(fsF,3) : '—';
+  fsBEl.textContent = fsB!==null ? fmt(fsB,3) : '—';
+
+  const v=verdict(fsB);
+  stampVal.textContent = fsB!==null ? fmt(fsB,2) : '—';
+  stampLabel.textContent = v.text;
+  stamp.style.borderColor=v.color;
+  stampVal.style.color=v.color;
+
+  const width=result.xR-result.xL;
+  const maxDepth=Math.max(...result.slices.map(s=>s.h));
+  document.getElementById('stat-width').textContent=fmt(width,1)+' m';
+  document.getElementById('stat-depth').textContent=fmt(maxDepth,1)+' m';
+
+  let rows='', sumNum=0, sumDen=0;
+  result.slices.forEach((s,i)=>{
+    const phiRad=s.phi*Math.PI/180;
+    let mAlpha=Math.cos(s.alpha)*(1+Math.tan(s.alpha)*Math.tan(phiRad)/(fsB||1.5));
+    const numTerm=(s.c*s.b+(s.W-s.u*s.b)*Math.tan(phiRad));
+    const denTerm=s.W*Math.sin(s.alpha);
+    sumNum+=numTerm/(Math.abs(mAlpha)<0.05?(mAlpha<0?-0.05:0.05):mAlpha);
+    sumDen+=denTerm;
+    rows+=`<tr><td>${i+1}</td><td>${s.layer}</td><td>${fmt(s.b,2)}</td><td>${fmt(s.h,2)}</td><td>${fmt(s.alpha*180/Math.PI,1)}</td><td>${fmt(s.W,1)}</td><td>${fmt(numTerm,1)}</td><td>${fmt(mAlpha,3)}</td><td>${fmt(denTerm,1)}</td></tr>`;
+  });
+  tbody.innerHTML=rows;
+  footNum.textContent='Σ = '+fmt(sumNum,1);
+  footDen.textContent='Σ = '+fmt(sumDen,1);
+
+  drawDiagram(p,run,result);
+  return fsB;
+}
+
+function gridSearch(){
+  const p=readInputs();
+  const run=p.H*p.m;
+  const status=document.getElementById('search-status');
+  status.textContent='Đang quét lưới tâm trượt...';
+  setTimeout(()=>{
+    const centersX=9, centersY=9, radii=9;
+    let best=null;
+    for(let ix=0; ix<centersX; ix++){
+      const Xc = -run*1.1 + (run*1.7)*ix/(centersX-1);
+      for(let iy=0; iy<centersY; iy++){
+        const Yc = p.H*0.8 + (p.H*2.4)*iy/(centersY-1);
+        for(let ir=0; ir<radii; ir++){
+          const R = (run+p.H)*0.6 + ((run+p.H)*2.0)*ir/(radii-1);
+          const result=computeSlices(run,p.H,Xc,Yc,R,16,p);
+          if(!result || result.invalid || result.slices.length<8) continue;
+          const width=result.xR-result.xL;
+          if(width < run*0.25 || width > run*3.5) continue;
+          const maxDepth=Math.max(...result.slices.map(s=>s.h));
+          if(maxDepth < p.H*0.04) continue;
+          const fel=fsFellenius(result.slices);
+          if(!fel) continue;
+          const fsB=fsBishop(result.slices,fel.fs,fel.den);
+          if(!isFinite(fsB) || fsB<=0.05) continue;
+          if(!best || fsB<best.fsB){
+            best={Xc,Yc,R,fsB};
+          }
+        }
+      }
+    }
+    if(best){
+      el.Xc.value=best.Xc.toFixed(1);
+      el.Yc.value=best.Yc.toFixed(1);
+      el.R.value=best.R.toFixed(1);
+      recompute();
+      status.textContent=`Đã tìm thấy cung nguy hiểm nhất: FS ≈ ${best.fsB.toFixed(3)}`;
+    } else {
+      status.textContent='Không tìm được cung trượt hợp lệ trong phạm vi quét — thử điều chỉnh hình học.';
+    }
+  }, 30);
+}
+
+function clamp(v,lo,hi){ return Math.max(lo,Math.min(hi,v)); }
+
+function computeFSGrid(p,run){
+  const nx=26, ny=18, nR=13, sampleN=300;
+  const XcMin=-run*1.3, XcMax=run*0.9;
+  const YcMin=p.H*0.6, YcMax=p.H*3.2;
+  const RMin=(run+p.H)*0.5, RMax=(run+p.H)*2.4;
+  const grid=[];
+  for(let iy=0; iy<ny; iy++){
+    const Yc=YcMin+(YcMax-YcMin)*iy/(ny-1);
+    const row=[];
+    for(let ix=0; ix<nx; ix++){
+      const Xc=XcMin+(XcMax-XcMin)*ix/(nx-1);
+      let minFS=null,bestR=null;
+      for(let ir=0; ir<nR; ir++){
+        const R=RMin+(RMax-RMin)*ir/(nR-1);
+        const result=computeSlices(run,p.H,Xc,Yc,R,14,p,sampleN);
+        if(!result||result.invalid||result.slices.length<8) continue;
+        const width=result.xR-result.xL;
+        if(width<run*0.25||width>run*3.5) continue;
+        const maxDepth=Math.max(...result.slices.map(s=>s.h));
+        if(maxDepth<p.H*0.04) continue;
+        const fel=fsFellenius(result.slices);
+        if(!fel) continue;
+        const fsB=fsBishop(result.slices,fel.fs,fel.den);
+        if(!isFinite(fsB)||fsB<=0.05) continue;
+        if(minFS===null||fsB<minFS){ minFS=fsB; bestR=R; }
+      }
+      row.push({Xc,Yc,fs:minFS,R:bestR});
+    }
+    grid.push(row);
+  }
+  return {grid,nx,ny,XcMin,XcMax,YcMin,YcMax};
+}
+
+function marchingSquares(grid,nx,ny,level){
+  const segments=[];
+  const table={
+    1:[['left','bottom']],2:[['bottom','right']],3:[['left','right']],
+    4:[['top','right']],5:[['left','top'],['bottom','right']],6:[['top','bottom']],
+    7:[['left','top']],8:[['left','top']],9:[['top','bottom']],
+    10:[['top','right'],['left','bottom']],11:[['top','right']],12:[['left','right']],
+    13:[['bottom','right']],14:[['left','bottom']]
+  };
+  function lerp(va,vb){ return va===vb ? 0.5 : (level-va)/(vb-va); }
+  for(let iy=0; iy<ny-1; iy++){
+    for(let ix=0; ix<nx-1; ix++){
+      const TL=grid[iy][ix].fs, TR=grid[iy][ix+1].fs, BR=grid[iy+1][ix+1].fs, BL=grid[iy+1][ix].fs;
+      if(TL===null||TR===null||BR===null||BL===null) continue;
+      const bit=(TL>level?8:0)|(TR>level?4:0)|(BR>level?2:0)|(BL>level?1:0);
+      if(bit===0||bit===15) continue;
+      const pts={
+        top:[ix+lerp(TL,TR), iy],
+        right:[ix+1, iy+lerp(TR,BR)],
+        bottom:[ix+lerp(BL,BR), iy+1],
+        left:[ix, iy+lerp(TL,BL)]
+      };
+      for(const [a,b] of table[bit]) segments.push([pts[a],pts[b]]);
+    }
+  }
+  return segments;
+}
+
+function contourLevels(minFS,maxFS){
+  const step=0.2;
+  const levels=new Set();
+  const lo=Math.ceil(minFS/step)*step;
+  for(let v=lo; v<=maxFS+1e-9; v+=step) levels.add(+v.toFixed(2));
+  if(minFS<=1.0 && maxFS>=1.0) levels.add(1.0);
+  return [...levels].filter(v=>v>=minFS-0.001 && v<=maxFS+0.001).sort((a,b)=>a-b);
+}
+
+function fsColor(fs){
+  if(fs===null) return 'transparent';
+  const anchors=[[0.8,[150,30,25]],[1.0,[196,57,47]],[1.5,[176,114,8]],[2.5,[30,138,87]]];
+  if(fs<=anchors[0][0]) return `rgb(${anchors[0][1].join(',')})`;
+  if(fs>=anchors[anchors.length-1][0]) return `rgb(${anchors[anchors.length-1][1].join(',')})`;
+  for(let i=0;i<anchors.length-1;i++){
+    const [v0,c0]=anchors[i], [v1,c1]=anchors[i+1];
+    if(fs>=v0 && fs<=v1){
+      const t=(fs-v0)/(v1-v0);
+      const c=c0.map((c0i,idx)=>Math.round(c0i+(c1[idx]-c0i)*t));
+      return `rgb(${c.join(',')})`;
+    }
+  }
+  return `rgb(${anchors[anchors.length-1][1].join(',')})`;
+}
+
+function drawContourPlot(p,run,gd){
+  const svg=document.getElementById('contour-diagram');
+  const W=900,H=420;
+  const {grid,nx,ny,XcMin,XcMax,YcMin,YcMax}=gd;
+  const modelMinX=Math.min(-run-run*0.3, XcMin-2);
+  const modelMaxX=Math.max(run*1.1, XcMax+2);
+  const modelMinY=-p.H*0.15;
+  const modelMaxY=YcMax+p.H*0.3;
+  const padPx=50;
+  const spanX=modelMaxX-modelMinX, spanY=modelMaxY-modelMinY;
+  const scale=Math.min((W-2*padPx)/spanX,(H-2*padPx-40)/spanY);
+  const offX=padPx-modelMinX*scale;
+  const offY=H-padPx-(-modelMinY)*scale;
+  function px(x){ return offX+x*scale; }
+  function py(y){ return offY-y*scale; }
+
+  const gxMin=Math.max(modelMinX,-run-run*0.3);
+  const groundPts=[];
+  for(let i=0;i<=50;i++){ const x=gxMin+((run*1.1)-gxMin)*i/50; groundPts.push([px(x),py(groundY(x,run,p.H))]); }
+  const groundPath='M'+groundPts.map(pt=>pt.join(',')).join(' L');
+
+  let minFS=Infinity,maxFS=-Infinity,minCell=null;
+  for(const row of grid) for(const c of row){
+    if(c.fs!==null){
+      if(c.fs<minFS){minFS=c.fs;minCell=c;}
+      if(c.fs>maxFS) maxFS=c.fs;
+    }
+  }
+
+  let dots='';
+  for(const row of grid) for(const c of row){
+    if(c.fs===null) continue;
+    dots += `<circle cx="${px(c.Xc).toFixed(1)}" cy="${py(c.Yc).toFixed(1)}" r="2.4" fill="${fsColor(c.fs)}" fill-opacity="0.88"/>`;
+  }
+
+  let contourEls='';
+  if(isFinite(minFS)){
+    const levels=contourLevels(minFS,maxFS);
+    for(const level of levels){
+      const segs=marchingSquares(grid,nx,ny,level);
+      if(segs.length===0) continue;
+      let d='';
+      for(const [a,b] of segs){
+        const Xc1=XcMin+(XcMax-XcMin)*a[0]/(nx-1), Yc1=YcMin+(YcMax-YcMin)*a[1]/(ny-1);
+        const Xc2=XcMin+(XcMax-XcMin)*b[0]/(nx-1), Yc2=YcMin+(YcMax-YcMin)*b[1]/(ny-1);
+        d += `M${px(Xc1).toFixed(1)},${py(Yc1).toFixed(1)} L${px(Xc2).toFixed(1)},${py(Yc2).toFixed(1)} `;
+      }
+      const isKey=Math.abs(level-1.0)<0.01;
+      contourEls += `<path d="${d}" fill="none" stroke="${isKey?'var(--danger)':'var(--ink-dim)'}" stroke-width="${isKey?1.6:0.8}" stroke-dasharray="${isKey?'0':'2,2'}" opacity="${isKey?0.95:0.6}"/>`;
+      const [a0,b0]=segs[Math.floor(segs.length/2)];
+      const midXc=XcMin+(XcMax-XcMin)*((a0[0]+b0[0])/2)/(nx-1);
+      const midYc=YcMin+(YcMax-YcMin)*((a0[1]+b0[1])/2)/(ny-1);
+      contourEls += `<text x="${(px(midXc)+4).toFixed(1)}" y="${(py(midYc)-4).toFixed(1)}" font-size="9" fill="${isKey?'var(--danger)':'var(--ink-faint)'}" font-family="IBM Plex Mono, monospace">${level.toFixed(1)}</text>`;
+    }
+  }
+
+  let minMarker='';
+  if(minCell){
+    const mx=px(minCell.Xc), my=py(minCell.Yc);
+    minMarker = `<circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="6" fill="none" stroke="var(--danger)" stroke-width="2"/>
+      <line x1="${(mx-9).toFixed(1)}" y1="${my.toFixed(1)}" x2="${(mx+9).toFixed(1)}" y2="${my.toFixed(1)}" stroke="var(--danger)" stroke-width="1.3"/>
+      <line x1="${mx.toFixed(1)}" y1="${(my-9).toFixed(1)}" x2="${mx.toFixed(1)}" y2="${(my+9).toFixed(1)}" stroke="var(--danger)" stroke-width="1.3"/>
+      <text x="${(mx+11).toFixed(1)}" y="${(my-8).toFixed(1)}" font-size="11" fill="var(--danger)" font-family="IBM Plex Mono, monospace" font-weight="600">FS min ≈ ${minFS.toFixed(3)}</text>`;
+  }
+
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML = `
+    <path d="${groundPath} L${px(run*1.1).toFixed(1)},${py(modelMinY).toFixed(1)} L${px(gxMin).toFixed(1)},${py(modelMinY).toFixed(1)} Z" fill="var(--layer1)" opacity="0.5"/>
+    <path d="${groundPath}" fill="none" stroke="var(--layer1-b)" stroke-width="1.5"/>
+    ${dots}
+    ${contourEls}
+    ${minMarker}
+  `;
+  return minCell;
+}
+
+let lastMinCell=null;
+
+function handleGeometryChange(){
+  const H=parseFloat(el.H.value), m=parseFloat(el.m.value);
+  const run=H*m;
+  const newL=H+run;
+  if(lastL && lastL>0){
+    const factor=newL/lastL;
+    const XcMin=parseFloat(el.Xc.min), XcMax=parseFloat(el.Xc.max);
+    const YcMin=parseFloat(el.Yc.min), YcMax=parseFloat(el.Yc.max);
+    const RMin=parseFloat(el.R.min), RMax=parseFloat(el.R.max);
+    el.Xc.value = clamp(parseFloat(el.Xc.value)*factor, XcMin, XcMax).toFixed(1);
+    el.Yc.value = clamp(parseFloat(el.Yc.value)*factor, YcMin, YcMax).toFixed(1);
+    el.R.value = clamp(parseFloat(el.R.value)*factor, RMin, RMax).toFixed(1);
+  }
+  lastL=newL;
+  recompute();
+}
+
+geomIds.forEach(id=>el[id].addEventListener('input',handleGeometryChange));
+ids.filter(id=>!geomIds.includes(id)).forEach(id=>el[id].addEventListener('input',()=>recompute()));
+document.getElementById('btn-search').addEventListener('click',gridSearch);
+
+document.getElementById('btn-contour').addEventListener('click', ()=>{
+  const p=readInputs();
+  const run=p.H*p.m;
+  const status=document.getElementById('contour-status');
+  const section=document.getElementById('contour-section');
+  section.style.display='block';
+  status.textContent='Đang quét lưới tâm trượt × bán kính — có thể mất vài giây...';
+  document.getElementById('btn-use-min').style.display='none';
+  setTimeout(()=>{
+    const gd=computeFSGrid(p,run);
+    const minCell=drawContourPlot(p,run,gd);
+    if(minCell){
+      lastMinCell=minCell;
+      status.textContent=`Quét ${gd.nx}×${gd.ny} tâm × ${13} bán kính mỗi tâm. Tâm nguy hiểm nhất: Xc=${minCell.Xc.toFixed(1)}m, Yc=${minCell.Yc.toFixed(1)}m, R=${minCell.R.toFixed(1)}m — FS ≈ ${minCell.fs.toFixed(3)}.`;
+      document.getElementById('btn-use-min').style.display='';
+    } else {
+      status.textContent='Không tìm được tâm trượt hợp lệ nào trong phạm vi quét — thử điều chỉnh hình học hoặc lớp đất.';
+    }
+  }, 30);
+});
+
+document.getElementById('btn-use-min').addEventListener('click', ()=>{
+  if(!lastMinCell) return;
+  el.Xc.value=lastMinCell.Xc.toFixed(1);
+  el.Yc.value=lastMinCell.Yc.toFixed(1);
+  el.R.value=lastMinCell.R.toFixed(1);
+  recompute();
+});
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    activeLayer=parseInt(btn.dataset.layer);
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b===btn));
+    loadLayerIntoFields(activeLayer);
+    drawStratMini();
+  });
+});
+['Lgamma','Lc','Lphi','Lt'].forEach(id=>document.getElementById(id).addEventListener('input',onLayerFieldChange));
+
+lastL = parseFloat(el.H.value) + parseFloat(el.H.value)*parseFloat(el.m.value);
+loadLayerIntoFields(1);
+updateTotalDepth();
+drawStratMini();
+recompute();
+</script>
+</body>
+</html>
