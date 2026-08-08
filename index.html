@@ -18,6 +18,7 @@
     --layer3:#CDA96F; --layer3-b:#966E38;
     --layer4:#AC8F6C; --layer4-b:#785E39;
     --layer5:#C6CBD2; --layer5-b:#68717E;
+    --fillsoil:#D9B48F; --fillsoil-b:#A56A3C;
     --safe:#1E8A57; --safe-dim:#DFF3E7;
     --warn:#B07208; --warn-dim:#FBEDD1;
     --danger:#C4392F; --danger-dim:#FBE1DD;
@@ -74,6 +75,12 @@
   .field-note{font-size:11px; color:var(--ink-faint); margin-top:4px; line-height:1.4;}
   .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
 
+  select{
+    width:100%; background:var(--field); border:1px solid var(--line); color:var(--ink);
+    font-family:'IBM Plex Sans',sans-serif; font-size:12.5px; font-weight:500; padding:8px 10px;
+    border-radius:6px; cursor:pointer;
+  }
+
   .strat-row{display:flex; gap:12px; margin-bottom:14px;}
   .strat-svg{width:36px; height:160px; flex-shrink:0; border-radius:4px; overflow:hidden; border:1px solid var(--line);}
   .strat-tabs{display:flex; flex-direction:column; gap:4px; flex:1;}
@@ -91,6 +98,13 @@
   .tab-btn:nth-child(5){ --dot:var(--layer5-b); }
   .tab-btn:hover{background:var(--accent-dim);}
   .tab-btn.active{background:var(--accent-dim); border-color:var(--accent); color:var(--ink);}
+  .type-btn{
+    text-align:center; background:var(--panel2); border:1px solid var(--line); color:var(--ink-dim);
+    font-family:'IBM Plex Sans',sans-serif; font-size:11.5px; font-weight:500; padding:6px 9px;
+    border-radius:5px; cursor:pointer; transition:background .12s, border-color .12s, color .12s;
+  }
+  .type-btn:hover{background:var(--accent-dim);}
+  .type-btn.active{background:var(--accent-dim); border-color:var(--accent); color:var(--ink);}
 
   button{
     width:100%; background:var(--field); border:1px solid var(--line); color:var(--ink);
@@ -114,7 +128,7 @@
   .stamp .fs-label{font-size:9px; letter-spacing:0.08em; margin-top:4px; text-transform:uppercase;}
   .stamp .fs-method{font-size:8px; letter-spacing:0.06em; margin-top:2px; opacity:.8;}
 
-  .results-bar{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:14px;}
+  .results-bar{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px;}
   .stat{background:var(--panel2); border:1px solid var(--line); border-radius:7px; padding:10px 12px;}
   .stat .lbl{font-size:10.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-faint);}
   .stat .val{font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:500; margin-top:3px;}
@@ -153,7 +167,7 @@
       <div class="credit" data-i18n="credit">Phát triển: TS. Đặng Minh Tân — Trường Đại học Giao thông vận tải</div>
     </div>
     <div>
-      <div class="badge-row"><span>Fellenius</span><span>Bishop simplified</span><span data-i18n="badge_layers">5 lớp đất</span></div>
+      <div class="badge-row"><span>Fellenius</span><span>Bishop simplified</span><span>Janbu simplified</span><span data-i18n="badge_layers">5 lớp đất</span></div>
       <div class="lang-toggle">
         <button type="button" class="lang-btn active" id="lang-vi">VI</button>
         <button type="button" class="lang-btn" id="lang-en">EN</button>
@@ -173,6 +187,32 @@
           <label><span data-i18n="label_m">Hệ số mái dốc m (ngang : đứng = m : 1)</span> <b id="v-m">1.50</b></label>
           <input type="range" id="m" min="0.5" max="3" step="0.05" value="1.5">
           <div class="field-note" data-i18n="note_m">m = 1.5 nghĩa là mái dốc 1:1.5 (đứng 1, ngang 1.5)</div>
+        </div>
+        <div class="field" style="margin-top:12px;">
+          <label data-i18n="label_slopetype">Loại mái dốc</label>
+          <div class="strat-tabs" style="flex-direction:row;">
+            <button type="button" class="type-btn active" id="type-cut" data-i18n="type_cut" style="flex:1;">Đào (cut)</button>
+            <button type="button" class="type-btn" id="type-fill" data-i18n="type_fill" style="flex:1;">Đắp (fill)</button>
+          </div>
+        </div>
+        <div id="fill-fields" style="display:none; margin-top:12px;">
+          <div class="field-note" data-i18n="fill_note" style="margin-bottom:8px;">Đất đắp (đắp mới) tách riêng khỏi nền đất tự nhiên bên dưới cao độ chân dốc — khối đắp dùng chỉ tiêu riêng, nền tự nhiên vẫn theo địa tầng 5 lớp bên dưới.</div>
+          <div class="row2">
+            <div class="field">
+              <label>γ <b id="v-Fgamma">20.0</b></label>
+              <input type="range" id="Fgamma" min="14" max="24" step="0.5" value="20">
+              <div class="field-note" data-i18n="unit_kNm3">kN/m³</div>
+            </div>
+            <div class="field">
+              <label>c <b id="v-Fc">10</b></label>
+              <input type="range" id="Fc" min="0" max="100" step="1" value="10">
+              <div class="field-note" data-i18n="unit_kPa">kPa</div>
+            </div>
+          </div>
+          <div class="field">
+            <label><span data-i18n="label_phi">φ (góc ma sát trong)</span> <b id="v-Fphi">28°</b></label>
+            <input type="range" id="Fphi" min="0" max="45" step="0.5" value="28">
+          </div>
         </div>
       </div>
 
@@ -223,6 +263,15 @@
       <div class="panel">
         <h2 data-i18n="panel_circle">Mặt trượt tròn (thử dần)</h2>
         <div class="field">
+          <label data-i18n="label_method">Phương pháp dùng để tìm kiếm &amp; đánh giá</label>
+          <select id="method-select">
+            <option value="bishop" selected data-i18n="method_bishop">Bishop đơn giản hóa</option>
+            <option value="fellenius" data-i18n="method_fellenius">Fellenius (OMS)</option>
+            <option value="janbu" data-i18n="method_janbu">Janbu đơn giản hóa</option>
+            <option value="spencer" data-i18n="method_spencer">Spencer (đầy đủ, có lực giữa các mảnh)</option>
+          </select>
+        </div>
+        <div class="field">
           <label><span data-i18n="label_Xc">Tâm trượt Xc</span> <b id="v-Xc">-3.0 m</b></label>
           <input type="range" id="Xc" min="-30" max="30" step="0.2" value="-3">
         </div>
@@ -255,7 +304,7 @@
         <div class="stamp" id="stamp">
           <div class="fs-val" id="stamp-val">—</div>
           <div class="fs-label" id="stamp-label">—</div>
-          <div class="fs-method">Bishop simplified</div>
+          <div class="fs-method" id="stamp-method">Bishop simplified</div>
         </div>
       </div>
 
@@ -270,6 +319,8 @@
       <div class="results-bar">
         <div class="stat"><div class="lbl" data-i18n="stat_fellenius">FS — Fellenius</div><div class="val" id="fs-fellenius">—</div></div>
         <div class="stat"><div class="lbl" data-i18n="stat_bishop">FS — Bishop</div><div class="val" id="fs-bishop">—</div></div>
+        <div class="stat"><div class="lbl" data-i18n="stat_janbu">FS — Janbu</div><div class="val" id="fs-janbu">—</div></div>
+        <div class="stat"><div class="lbl" data-i18n="stat_spencer">FS — Spencer</div><div class="val" id="fs-spencer">—</div></div>
         <div class="stat"><div class="lbl" data-i18n="stat_width">Chiều rộng khối trượt</div><div class="val" id="stat-width">—</div></div>
         <div class="stat"><div class="lbl" data-i18n="stat_depth">Độ sâu mặt trượt lớn nhất</div><div class="val" id="stat-depth">—</div></div>
       </div>
@@ -331,6 +382,10 @@ const I18N={
     label_H:'Chiều cao mái dốc H',
     label_m:'Hệ số mái dốc m (ngang : đứng = m : 1)',
     note_m:'m = 1.5 nghĩa là mái dốc 1:1.5 (đứng 1, ngang 1.5)',
+    label_slopetype:'Loại mái dốc',
+    type_cut:'Đào (cut)', type_fill:'Đắp (fill)',
+    fill_note:'Đất đắp (đắp mới) tách riêng khỏi nền đất tự nhiên bên dưới cao độ chân dốc — khối đắp dùng chỉ tiêu riêng, nền tự nhiên vẫn theo địa tầng 5 lớp bên dưới.',
+    diagram_fill:'đất đắp',
     panel_strat:'Địa tầng — 5 lớp đất',
     tab_1:'Lớp 1', tab_2:'Lớp 2', tab_3:'Lớp 3', tab_4:'Lớp 4', tab_5:'Lớp 5 · nền cứng',
     label_phi:'φ (góc ma sát trong)',
@@ -340,6 +395,9 @@ const I18N={
     label_ru:'ru (hệ số áp lực nước lỗ rỗng, áp dụng chung)',
     total_depth_label:'Tổng chiều dày 4 lớp trên tới nền cứng:',
     panel_circle:'Mặt trượt tròn (thử dần)',
+    label_method:'Phương pháp dùng để tìm kiếm & đánh giá',
+    method_bishop:'Bishop đơn giản hóa', method_fellenius:'Fellenius (OMS)', method_janbu:'Janbu đơn giản hóa',
+    method_spencer:'Spencer (đầy đủ, có lực giữa các mảnh)',
     label_Xc:'Tâm trượt Xc', label_Yc:'Tâm trượt Yc', label_R:'Bán kính R', label_n:'Số dải tính toán',
     btn_search:'Tìm cung trượt nguy hiểm nhất',
     btn_contour:'Vẽ lưới tâm trượt & đường đồng mức FS',
@@ -348,7 +406,7 @@ const I18N={
     legend_safe:'FS ≥ 1.50 ổn định',
     legend_warn:'1.00 ≤ FS < 1.50 cần kiểm tra',
     legend_danger:'FS < 1.00 không ổn định',
-    stat_fellenius:'FS — Fellenius', stat_bishop:'FS — Bishop',
+    stat_fellenius:'FS — Fellenius', stat_bishop:'FS — Bishop', stat_janbu:'FS — Janbu', stat_spencer:'FS — Spencer',
     stat_width:'Chiều rộng khối trượt', stat_depth:'Độ sâu mặt trượt lớn nhất',
     contour_heading:'Lưới tâm trượt & đường đồng mức FS',
     contour_low:'FS ≤ 1,0', contour_mid:'FS ≈ 1,5', contour_high:'FS ≥ 2,5',
@@ -357,7 +415,7 @@ const I18N={
     table_summary:'Bảng tính chi tiết theo từng dải (phương pháp Bishop đơn giản hóa)',
     th_slice:'Dải', th_layer:'Lớp',
     limits_label:'Giới hạn của công cụ:',
-    limits_text:'áp dụng cho mặt trượt tròn (circular slip surface), phương pháp Fellenius (OMS) và Bishop đơn giản hóa (cân bằng mô men, bỏ qua lực giữa các dải). Nền đất tối đa 5 lớp với ranh giới nằm ngang (không nghiêng theo địa tầng thực); chỉ tiêu c, φ dùng để tính sức chống cắt tại đáy mỗi dải lấy theo lớp chứa điểm đáy đó, còn trọng lượng dải cộng dồn theo từng lớp mà dải đi qua. Lớp 5 coi là nền cứng/đá gốc — mặt trượt chạm tới ranh giới này sẽ bị coi là không hợp lệ. Áp lực nước lỗ rỗng xấp xỉ theo hệ số ru dùng chung cho mọi lớp, không mô phỏng lưới thấm hay mực nước ngầm thực tế. Không xét tải trọng động đất, mặt trượt phi tròn, địa tầng nghiêng/phức tạp, cốt gia cường (neo, cọc, vải địa kỹ thuật) hay hiệu ứng 3D. Dùng cho mục đích học tập/sơ bộ — với công trình thực tế cần kiểm tra bằng phần mềm chuyên dụng (SLOPE/W, GeoStudio, Plaxis…) và tiêu chuẩn hiện hành (TCVN 4253, 22TCN…).',
+    limits_text:'áp dụng cho mặt trượt tròn (circular slip surface). Bốn phương pháp: Fellenius (OMS), Bishop đơn giản hóa (cân bằng mô men), Janbu đơn giản hóa (cân bằng lực, hệ số hiệu chỉnh f0 theo d/L, dùng b1=0,5 chung cho đất c-φ) và Spencer (thỏa mãn đồng thời cân bằng lực và mô men bằng cách giải thêm góc nghiêng lực giữa các mảnh δ — đây là phương pháp "chuẩn" có xét lực tương tác giữa các mảnh, thường được dùng thay cho phương pháp Bishop chuẩn nguyên bản vì dễ hội tụ hơn). Bảng chi tiết từng dải luôn hiển thị theo cách tính Bishop. Có thể bật chế độ "Đắp" để tách riêng khối đất đắp (phía trên cao độ chân dốc) khỏi nền đất tự nhiên — khối đắp dùng γ, c, φ riêng, nền tự nhiên vẫn theo địa tầng 5 lớp. Nền đất tối đa 5 lớp với ranh giới nằm ngang (không nghiêng theo địa tầng thực); chỉ tiêu c, φ dùng để tính sức chống cắt tại đáy mỗi dải lấy theo lớp (hoặc khối đắp) chứa điểm đáy đó. Lớp 5 coi là nền cứng/đá gốc — mặt trượt chạm tới ranh giới này sẽ bị coi là không hợp lệ. Áp lực nước lỗ rỗng xấp xỉ theo hệ số ru dùng chung cho mọi lớp, không mô phỏng lưới thấm hay mực nước ngầm thực tế. Không xét tải trọng động đất, mặt trượt phi tròn, địa tầng nghiêng/phức tạp, cốt gia cường (neo, cọc, vải địa kỹ thuật) hay hiệu ứng 3D. Dùng cho mục đích học tập/sơ bộ — với công trình thực tế cần kiểm tra bằng phần mềm chuyên dụng (SLOPE/W, GeoStudio, Plaxis…) và tiêu chuẩn hiện hành (TCVN 4253, 22TCN…).',
     verdict_invalid:'không hợp lệ', verdict_unstable:'không ổn định',
     verdict_marginal:'cần kiểm tra thêm', verdict_stable:'ổn định',
     msg_bedrock:'mặt trượt chạm nền cứng', msg_invalid_surface:'mặt trượt không hợp lệ',
@@ -379,6 +437,10 @@ const I18N={
     label_H:'Slope height H',
     label_m:'Slope ratio m (horizontal : vertical = m : 1)',
     note_m:'m = 1.5 means a 1:1.5 slope (1 vertical, 1.5 horizontal)',
+    label_slopetype:'Slope type',
+    type_cut:'Cut', type_fill:'Fill (embankment)',
+    fill_note:'Newly placed fill is kept separate from the natural foundation soil below the toe elevation — the fill uses its own strength parameters, while the natural ground still follows the 5-layer stratigraphy below.',
+    diagram_fill:'fill',
     panel_strat:'Stratigraphy — 5 soil layers',
     tab_1:'Layer 1', tab_2:'Layer 2', tab_3:'Layer 3', tab_4:'Layer 4', tab_5:'Layer 5 · rigid base',
     label_phi:'φ (friction angle)',
@@ -388,6 +450,9 @@ const I18N={
     label_ru:'ru (pore pressure ratio, applied to all layers)',
     total_depth_label:'Total thickness of the 4 layers above bedrock:',
     panel_circle:'Trial circular slip surface',
+    label_method:'Method used for search & verdict',
+    method_bishop:'Bishop simplified', method_fellenius:'Fellenius (OMS)', method_janbu:'Janbu simplified',
+    method_spencer:'Spencer (rigorous, with interslice forces)',
     label_Xc:'Center Xc', label_Yc:'Center Yc', label_R:'Radius R', label_n:'Number of slices',
     btn_search:'Find critical slip surface',
     btn_contour:'Draw center grid & FS contour lines',
@@ -396,7 +461,7 @@ const I18N={
     legend_safe:'FS ≥ 1.50 stable',
     legend_warn:'1.00 ≤ FS < 1.50 needs review',
     legend_danger:'FS < 1.00 unstable',
-    stat_fellenius:'FS — Fellenius', stat_bishop:'FS — Bishop',
+    stat_fellenius:'FS — Fellenius', stat_bishop:'FS — Bishop', stat_janbu:'FS — Janbu', stat_spencer:'FS — Spencer',
     stat_width:'Slide mass width', stat_depth:'Maximum slip depth',
     contour_heading:'Trial-center grid & FS contour lines',
     contour_low:'FS ≤ 1.0', contour_mid:'FS ≈ 1.5', contour_high:'FS ≥ 2.5',
@@ -405,7 +470,7 @@ const I18N={
     table_summary:'Detailed per-slice calculation (simplified Bishop method)',
     th_slice:'Slice', th_layer:'Layer',
     limits_label:'Tool limitations:',
-    limits_text:'applies to circular slip surfaces only, using the Fellenius (OMS) and simplified Bishop methods (moment equilibrium, inter-slice forces ignored). Up to 5 soil layers with horizontal boundaries (not following actual dipping strata); the c, φ used for shear strength at each slice base are taken from the layer containing that base point, while slice weight is accumulated layer by layer through the slice. Layer 5 is treated as bedrock/a rigid stratum — a slip surface reaching this boundary is treated as invalid. Pore pressure is approximated with a single ru ratio applied to all layers, not a real seepage mesh or water table. Seismic loading, non-circular slip surfaces, complex/dipping strata, reinforcement (anchors, piles, geogrids) and 3D effects are not considered. For learning/preliminary use only — real projects should be checked with dedicated software (SLOPE/W, GeoStudio, Plaxis…) and current design standards.',
+    limits_text:'applies to circular slip surfaces only. Four methods: Fellenius (OMS), simplified Bishop (moment equilibrium), simplified Janbu (force equilibrium, f0 correction based on d/L, using a general b1=0.5 for c-φ soil) and Spencer (satisfies both force and moment equilibrium by additionally solving for the interslice force inclination δ — this is the "rigorous" method that accounts for interslice force interaction, generally used today in place of the original rigorous Bishop method since it converges more reliably). The detailed per-slice table always shows the Bishop breakdown. A "Fill" mode can be enabled to separate newly placed fill (above the toe elevation) from the natural foundation soil — the fill uses its own γ, c, φ, while the natural ground still follows the 5-layer stratigraphy. Up to 5 soil layers with horizontal boundaries (not following actual dipping strata); the c, φ used for shear strength at each slice base are taken from the layer (or fill) containing that base point. Layer 5 is treated as bedrock/a rigid stratum — a slip surface reaching this boundary is treated as invalid. Pore pressure is approximated with a single ru ratio applied to all layers, not a real seepage mesh or water table. Seismic loading, non-circular slip surfaces, complex/dipping strata, reinforcement (anchors, piles, geogrids) and 3D effects are not considered. For learning/preliminary use only — real projects should be checked with dedicated software (SLOPE/W, GeoStudio, Plaxis…) and current design standards.',
     verdict_invalid:'invalid', verdict_unstable:'unstable',
     verdict_marginal:'needs review', verdict_stable:'stable',
     msg_bedrock:'slip surface reaches bedrock', msg_invalid_surface:'invalid slip surface',
@@ -445,6 +510,8 @@ const layerDefaults=[
 ];
 let layers=layerDefaults.map(l=>({...l}));
 let activeLayer=1;
+let fillMode=false;
+let fill={gamma:20, c:10, phi:28};
 
 function layerBoundaries(ls){
   const b=[Infinity]; let cum=0;
@@ -496,7 +563,7 @@ function findEntryExit(run,H,Xc,Yc,R,sampleN){
 }
 
 function computeSlices(run,H,Xc,Yc,R,n,soil,sampleN){
-  const {layers,ru}=soil;
+  const {layers,ru,fillMode,fill}=soil;
   const bnd=layerBoundaries(layers);
   const rigidTop=bnd[4];
   const ee=findEntryExit(run,H,Xc,Yc,R,sampleN);
@@ -511,21 +578,33 @@ function computeSlices(run,H,Xc,Yc,R,n,soil,sampleN){
     if(byRaw===null) continue;
     if(byRaw < rigidTop - 1e-9) return {invalid:'bedrock'};
     const h=Math.max(0,yTop-byRaw);
+    const naturalTop = fillMode ? Math.min(yTop,0) : yTop;
     let W=0;
     for(let L=0; L<4; L++){
-      const top=Math.min(yTop,bnd[L]);
+      const top=Math.min(naturalTop,bnd[L]);
       const bot=Math.max(byRaw,bnd[L+1]);
       const thick=Math.max(0, top-bot);
       W += layers[L].gamma*thick*b;
+    }
+    let fillThick=0;
+    if(fillMode){
+      fillThick=Math.max(0, yTop-Math.max(byRaw,0));
+      W += fill.gamma*fillThick*b;
     }
     const sinA=Math.max(-1,Math.min(1,(Xc-xMid)/R));
     const alpha=Math.asin(sinA);
     const u = b>0 ? ru*(W/b) : 0;
     const l=b/Math.cos(alpha);
-    let layerIdx=4;
-    for(let L=0;L<4;L++){ if(byRaw>=bnd[L+1]-1e-9){ layerIdx=L; break; } }
-    const lyr=layers[layerIdx];
-    slices.push({xMid,b,h,alpha,W,u,l,c:lyr.c,phi:lyr.phi,layer:layerIdx+1});
+    let sliceC,slicePhi,layerLabel;
+    if(fillMode && byRaw>=0-1e-9){
+      sliceC=fill.c; slicePhi=fill.phi; layerLabel='fill';
+    } else {
+      let layerIdx=4;
+      for(let L=0;L<4;L++){ if(byRaw>=bnd[L+1]-1e-9){ layerIdx=L; break; } }
+      const lyr=layers[layerIdx];
+      sliceC=lyr.c; slicePhi=lyr.phi; layerLabel=layerIdx+1;
+    }
+    slices.push({xMid,b,h,alpha,W,u,l,c:sliceC,phi:slicePhi,layer:layerLabel,fillThick});
   }
   return {slices,xL,xR};
 }
@@ -559,13 +638,123 @@ function fsBishop(slices,fsInit,den){
   return fs;
 }
 
+function fsJanbuUncorrected(slices){
+  let denTan=0;
+  for(const s of slices) denTan += s.W*Math.tan(s.alpha);
+  if(Math.abs(denTan)<=1e-9) return null;
+  let fs=1.5;
+  for(let iter=0;iter<60;iter++){
+    let num=0;
+    for(const s of slices){
+      const phiRad=s.phi*Math.PI/180;
+      let mAlpha=Math.cos(s.alpha)*(1+Math.tan(s.alpha)*Math.tan(phiRad)/fs);
+      if(Math.abs(mAlpha)<0.05) mAlpha = mAlpha<0 ? -0.05 : 0.05;
+      num += (s.c*s.b + (s.W - s.u*s.b)*Math.tan(phiRad))/mAlpha;
+    }
+    const newFs=num/denTan;
+    if(!isFinite(newFs) || newFs<=0) break;
+    if(Math.abs(newFs-fs)<1e-5){ fs=newFs; break; }
+    fs=newFs;
+  }
+  return fs;
+}
+
+function janbuF0(depth,width){
+  if(width<=0) return 1;
+  const dL=depth/width;
+  const b1=0.5;
+  const f0=1+b1*(dL-1.4*dL*dL);
+  return clamp(f0,1.0,1.15);
+}
+
+function fsJanbu(slices,width,maxDepth){
+  const raw=fsJanbuUncorrected(slices);
+  if(raw===null || !isFinite(raw) || raw<=0) return null;
+  const f0=janbuF0(maxDepth,width);
+  return {fs:raw*f0, f0, raw};
+}
+
+function spencerSliceForces(s,FS,delta){
+  const phiRad=s.phi*Math.PI/180;
+  const ad=s.alpha-delta;
+  let denom=Math.cos(ad)+(Math.tan(phiRad)/FS)*Math.sin(ad);
+  if(Math.abs(denom)<0.05) denom = denom<0 ? -0.05 : 0.05;
+  const N=(s.W*Math.cos(delta) - (s.c*s.l/FS)*Math.sin(ad))/denom;
+  const T=(s.c*s.l + N*Math.tan(phiRad))/FS;
+  return {N,T};
+}
+function spencerSolveFSforDelta(slices,delta,fsInit){
+  let FS=fsInit>0?fsInit:1.5;
+  let denomMoment=0;
+  for(const s of slices) denomMoment+=s.W*Math.sin(s.alpha);
+  if(Math.abs(denomMoment)<1e-9) return null;
+  for(let iter=0; iter<50; iter++){
+    let numMoment=0;
+    for(const s of slices){
+      const phiRad=s.phi*Math.PI/180;
+      const {N}=spencerSliceForces(s,FS,delta);
+      numMoment += s.c*s.l + N*Math.tan(phiRad);
+    }
+    const newFS=numMoment/denomMoment;
+    if(!isFinite(newFS)||newFS<=0) return null;
+    if(Math.abs(newFS-FS)<1e-5){ FS=newFS; break; }
+    FS=newFS;
+  }
+  return FS;
+}
+function spencerForceResidual(slices,FS,delta){
+  let E=0;
+  for(const s of slices){
+    const {N,T}=spencerSliceForces(s,FS,delta);
+    E = E + T*Math.cos(s.alpha) - N*Math.sin(s.alpha);
+  }
+  return E;
+}
+function fsSpencer(slices){
+  let loD=-35*Math.PI/180, hiD=35*Math.PI/180;
+  let fsAtLo=spencerSolveFSforDelta(slices,loD,1.3);
+  let fsAtHi=spencerSolveFSforDelta(slices,hiD,1.3);
+  if(fsAtLo===null || fsAtHi===null) return null;
+  let resLo=spencerForceResidual(slices,fsAtLo,loD);
+  let resHi=spencerForceResidual(slices,fsAtHi,hiD);
+  if(resLo*resHi>0){
+    const fs0=spencerSolveFSforDelta(slices,0,1.3);
+    if(fs0===null) return null;
+    return {fs:fs0, delta:0, converged:false};
+  }
+  let fsGuess=1.3, midD=0;
+  const totalW=slices.reduce((a,s)=>a+s.W,0);
+  for(let iter=0; iter<40; iter++){
+    midD=(loD+hiD)/2;
+    const fsMid=spencerSolveFSforDelta(slices,midD,fsGuess);
+    if(fsMid===null) break;
+    fsGuess=fsMid;
+    const resMid=spencerForceResidual(slices,fsMid,midD);
+    if(Math.abs(resMid) < 1e-4*Math.max(1,totalW)){
+      return {fs:fsMid, delta:midD, converged:true};
+    }
+    if((resLo<0&&resMid<0)||(resLo>0&&resMid>0)){ loD=midD; resLo=resMid; }
+    else { hiD=midD; resHi=resMid; }
+  }
+  return {fs:fsGuess, delta:midD, converged:false};
+}
+
+function computeMethodFS(slices,width,maxDepth,method){
+  const fel=fsFellenius(slices);
+  if(!fel) return null;
+  if(method==='fellenius') return fel.fs;
+  if(method==='janbu'){ const j=fsJanbu(slices,width,maxDepth); return j? j.fs : null; }
+  if(method==='spencer'){ const sp=fsSpencer(slices); return sp? sp.fs : null; }
+  return fsBishop(slices,fel.fs,fel.den);
+}
+
 function readInputs(){
   return {
     H:parseFloat(el.H.value), m:parseFloat(el.m.value),
     ru:parseFloat(el.ru.value),
     Xc:parseFloat(el.Xc.value), Yc:parseFloat(el.Yc.value),
     R:parseFloat(el.R.value), n:parseInt(el.n.value),
-    layers:layers
+    layers:layers, fillMode:fillMode, fill:fill
   };
 }
 
@@ -678,7 +867,18 @@ function drawDiagram(p, run, result){
   }
   const groundPath='M'+groundPts.map(pt=>pt.join(',')).join(' L');
   const layer1Bot=Math.max(bnd[1],modelMinY);
-  const fillPath=groundPath+` L${px(run*1.2)},${py(layer1Bot)} L${px(gxMin)},${py(layer1Bot)} Z`;
+  let fillZonePath='', fillZoneFill='';
+  let layer1TopY;
+  if(p.fillMode){
+    const fillBotClipped=Math.max(0,modelMinY);
+    fillZonePath=groundPath+` L${px(run*1.2)},${py(fillBotClipped)} L${px(gxMin)},${py(fillBotClipped)} Z`;
+    layer1TopY=0;
+  } else {
+    layer1TopY=null;
+  }
+  const layer1Path = p.fillMode
+    ? `M${px(gxMin)},${py(0)} L${px(run*1.2)},${py(0)} L${px(run*1.2)},${py(layer1Bot)} L${px(gxMin)},${py(layer1Bot)} Z`
+    : groundPath+` L${px(run*1.2)},${py(layer1Bot)} L${px(gxMin)},${py(layer1Bot)} Z`;
 
   const layerColors=['layer1','layer2','layer3','layer4','layer5'];
   let layerRects='';
@@ -737,12 +937,16 @@ function drawDiagram(p, run, result){
       <pattern id="hatch" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
         <line x1="0" y1="0" x2="0" y2="7" stroke="var(--layer1-b)" stroke-opacity="0.35" stroke-width="1"/>
       </pattern>
+      <pattern id="fillhatch" width="6" height="6" patternTransform="rotate(135)" patternUnits="userSpaceOnUse">
+        <line x1="0" y1="0" x2="0" y2="6" stroke="var(--fillsoil-b)" stroke-opacity="0.4" stroke-width="1.2"/>
+      </pattern>
       <pattern id="rockhatch" width="8" height="8" patternTransform="rotate(-45)" patternUnits="userSpaceOnUse">
         <line x1="0" y1="0" x2="0" y2="8" stroke="var(--layer5-b)" stroke-opacity="0.4" stroke-width="1.3"/>
       </pattern>
     </defs>
-    <path d="${fillPath}" fill="var(--layer1)"/>
-    <path d="${fillPath}" fill="url(#hatch)"/>
+    <path d="${layer1Path}" fill="var(--layer1)"/>
+    <path d="${layer1Path}" fill="url(#hatch)"/>
+    ${p.fillMode ? `<path d="${fillZonePath}" fill="var(--fillsoil)"/><path d="${fillZonePath}" fill="url(#fillhatch)"/><line x1="${px(gxMin)}" y1="${py(0)}" x2="${px(run*1.2)}" y2="${py(0)}" stroke="var(--fillsoil-b)" stroke-width="1.2" stroke-dasharray="5,3"/><text x="${px(gxMin)+6}" y="${py(0)-4}" fill="var(--fillsoil-b)" font-size="9.5" font-family="IBM Plex Mono, monospace">${t('diagram_fill')}</text>` : ''}
     ${layerRects}
     ${sliceEls}
     <path d="${groundPath}" fill="none" stroke="var(--layer1-b)" stroke-width="2"/>
@@ -790,9 +994,13 @@ function recompute(triggerRedraw){
 
   if(!result || result.invalid || result.slices.length<3){
     fsFEl.textContent='—'; fsBEl.textContent='—';
+    document.getElementById('fs-janbu').textContent='—';
+    document.getElementById('fs-spencer').textContent='—';
     stampVal.textContent='—';
     stampLabel.textContent = (result && result.invalid==='bedrock') ? t('msg_bedrock') : t('msg_invalid_surface');
     stamp.style.borderColor='var(--ink-faint)'; stampVal.style.color='var(--ink-faint)';
+    const methodSelInv=document.getElementById('method-select').value;
+    document.getElementById('stamp-method').textContent = methodSelInv==='fellenius' ? t('method_fellenius') : methodSelInv==='janbu' ? t('method_janbu') : methodSelInv==='spencer' ? t('method_spencer') : t('method_bishop');
     document.getElementById('stat-width').textContent='—';
     document.getElementById('stat-depth').textContent='—';
     tbody.innerHTML='';
@@ -805,17 +1013,29 @@ function recompute(triggerRedraw){
   const fsF = fel ? fel.fs : null;
   const fsB = fel ? fsBishop(result.slices,fsF,fel.den) : null;
 
+  const width=result.xR-result.xL;
+  const maxDepth=Math.max(...result.slices.map(s=>s.h));
+  const jan = fsJanbu(result.slices,width,maxDepth);
+  const fsJ = jan ? jan.fs : null;
+  const spen = fsSpencer(result.slices);
+  const fsS = spen ? spen.fs : null;
+
   fsFEl.textContent = fsF!==null ? fmt(fsF,3) : '—';
   fsBEl.textContent = fsB!==null ? fmt(fsB,3) : '—';
+  document.getElementById('fs-janbu').textContent = fsJ!==null ? fmt(fsJ,3) : '—';
+  document.getElementById('fs-spencer').textContent = fsS!==null ? fmt(fsS,3) : '—';
 
-  const v=verdict(fsB);
-  stampVal.textContent = fsB!==null ? fmt(fsB,2) : '—';
+  const methodSel=document.getElementById('method-select').value;
+  const fsPrimary = methodSel==='fellenius' ? fsF : methodSel==='janbu' ? fsJ : methodSel==='spencer' ? fsS : fsB;
+  const methodLabel = methodSel==='fellenius' ? t('method_fellenius') : methodSel==='janbu' ? t('method_janbu') : methodSel==='spencer' ? t('method_spencer') : t('method_bishop');
+  document.getElementById('stamp-method').textContent = methodLabel;
+
+  const v=verdict(fsPrimary);
+  stampVal.textContent = fsPrimary!==null ? fmt(fsPrimary,2) : '—';
   stampLabel.textContent = v.text;
   stamp.style.borderColor=v.color;
   stampVal.style.color=v.color;
 
-  const width=result.xR-result.xL;
-  const maxDepth=Math.max(...result.slices.map(s=>s.h));
   document.getElementById('stat-width').textContent=fmt(width,1)+' m';
   document.getElementById('stat-depth').textContent=fmt(maxDepth,1)+' m';
 
@@ -827,7 +1047,8 @@ function recompute(triggerRedraw){
     const denTerm=s.W*Math.sin(s.alpha);
     sumNum+=numTerm/(Math.abs(mAlpha)<0.05?(mAlpha<0?-0.05:0.05):mAlpha);
     sumDen+=denTerm;
-    rows+=`<tr><td>${i+1}</td><td>${s.layer}</td><td>${fmt(s.b,2)}</td><td>${fmt(s.h,2)}</td><td>${fmt(s.alpha*180/Math.PI,1)}</td><td>${fmt(s.W,1)}</td><td>${fmt(numTerm,1)}</td><td>${fmt(mAlpha,3)}</td><td>${fmt(denTerm,1)}</td></tr>`;
+    const layerCell = s.layer==='fill' ? t('diagram_fill') : s.layer;
+    rows+=`<tr><td>${i+1}</td><td>${layerCell}</td><td>${fmt(s.b,2)}</td><td>${fmt(s.h,2)}</td><td>${fmt(s.alpha*180/Math.PI,1)}</td><td>${fmt(s.W,1)}</td><td>${fmt(numTerm,1)}</td><td>${fmt(mAlpha,3)}</td><td>${fmt(denTerm,1)}</td></tr>`;
   });
   tbody.innerHTML=rows;
   footNum.textContent='Σ = '+fmt(sumNum,1);
@@ -840,6 +1061,7 @@ function recompute(triggerRedraw){
 function gridSearch(){
   const p=readInputs();
   const run=p.H*p.m;
+  const method=document.getElementById('method-select').value;
   const status=document.getElementById('search-status');
   status.textContent=t('search_scanning');
   setTimeout(()=>{
@@ -857,12 +1079,10 @@ function gridSearch(){
           if(width < run*0.25 || width > run*3.5) continue;
           const maxDepth=Math.max(...result.slices.map(s=>s.h));
           if(maxDepth < p.H*0.04) continue;
-          const fel=fsFellenius(result.slices);
-          if(!fel) continue;
-          const fsB=fsBishop(result.slices,fel.fs,fel.den);
-          if(!isFinite(fsB) || fsB<=0.05) continue;
-          if(!best || fsB<best.fsB){
-            best={Xc,Yc,R,fsB};
+          const fsM=computeMethodFS(result.slices,width,maxDepth,method);
+          if(!isFinite(fsM) || fsM===null || fsM<=0.05) continue;
+          if(!best || fsM<best.fsB){
+            best={Xc,Yc,R,fsB:fsM};
           }
         }
       }
@@ -883,6 +1103,7 @@ function clamp(v,lo,hi){ return Math.max(lo,Math.min(hi,v)); }
 
 function computeFSGrid(p,run){
   const nx=26, ny=18, nR=13, sampleN=300;
+  const method=document.getElementById('method-select').value;
   const XcMin=-run*1.3, XcMax=run*0.9;
   const YcMin=p.H*0.6, YcMax=p.H*3.2;
   const RMin=(run+p.H)*0.5, RMax=(run+p.H)*2.4;
@@ -901,11 +1122,9 @@ function computeFSGrid(p,run){
         if(width<run*0.25||width>run*3.5) continue;
         const maxDepth=Math.max(...result.slices.map(s=>s.h));
         if(maxDepth<p.H*0.04) continue;
-        const fel=fsFellenius(result.slices);
-        if(!fel) continue;
-        const fsB=fsBishop(result.slices,fel.fs,fel.den);
-        if(!isFinite(fsB)||fsB<=0.05) continue;
-        if(minFS===null||fsB<minFS){ minFS=fsB; bestR=R; }
+        const fsM=computeMethodFS(result.slices,width,maxDepth,method);
+        if(fsM===null||!isFinite(fsM)||fsM<=0.05) continue;
+        if(minFS===null||fsM<minFS){ minFS=fsM; bestR=R; }
       }
       row.push({Xc,Yc,fs:minFS,R:bestR});
     }
@@ -1108,8 +1327,34 @@ document.getElementById('btn-use-min').addEventListener('click', ()=>{
   recompute();
 });
 
+document.getElementById('type-cut').addEventListener('click', ()=>{
+  fillMode=false;
+  document.getElementById('type-cut').classList.add('active');
+  document.getElementById('type-fill').classList.remove('active');
+  document.getElementById('fill-fields').style.display='none';
+  recompute();
+});
+document.getElementById('type-fill').addEventListener('click', ()=>{
+  fillMode=true;
+  document.getElementById('type-fill').classList.add('active');
+  document.getElementById('type-cut').classList.remove('active');
+  document.getElementById('fill-fields').style.display='';
+  recompute();
+});
+function onFillFieldChange(){
+  fill.gamma=parseFloat(document.getElementById('Fgamma').value);
+  fill.c=parseFloat(document.getElementById('Fc').value);
+  fill.phi=parseFloat(document.getElementById('Fphi').value);
+  document.getElementById('v-Fgamma').textContent=fill.gamma.toFixed(1);
+  document.getElementById('v-Fc').textContent=fill.c.toFixed(0);
+  document.getElementById('v-Fphi').textContent=fill.phi.toFixed(1)+'°';
+  recompute();
+}
+['Fgamma','Fc','Fphi'].forEach(id=>document.getElementById(id).addEventListener('input',onFillFieldChange));
+
 document.getElementById('lang-vi').addEventListener('click', ()=>applyLanguage('vi'));
 document.getElementById('lang-en').addEventListener('click', ()=>applyLanguage('en'));
+document.getElementById('method-select').addEventListener('change', ()=>recompute());
 
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
